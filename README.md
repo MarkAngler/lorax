@@ -7,7 +7,7 @@ T2L (Text-to-LoRA) is a production-ready **pure Rust** implementation of the gro
 ## 🌟 Features
 
 - **🚀 Instant Adaptation**: Generate task-specific LoRA adapters from natural language descriptions in seconds
-- **🦀 Pure Rust**: Native performance with memory safety (Python support removed - see [MIGRATION.md](MIGRATION.md))
+- **🦀 Pure Rust**: Native performance with memory safety
 - **🏗️ Multiple Architectures**: Support for LLaMA, Mistral, Gemma, Phi, and Qwen models
 - **⚡ Hardware Acceleration**: CUDA and SIMD optimizations for maximum throughput
 - **🔧 Flexible Training**: Support for both reconstruction (distilling pre-trained LoRAs) and supervised fine-tuning

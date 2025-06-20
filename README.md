@@ -58,10 +58,6 @@ Add to your `Cargo.toml`:
 lorax = { git = "https://github.com/yourusername/lorax.git" }
 ```
 
-## ⚠️ Important Notice
-
-**Python Training Pipeline Deprecated**: As of this version, the Python training pipeline has been removed. T2L is now a **pure Rust** implementation. If you need Python support, see [MIGRATION.md](MIGRATION.md) for options.
-
 ## 🚀 Quick Start
 
 ### Complete Workflow Overview

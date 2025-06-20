@@ -563,12 +563,6 @@ t2l generate --config config.yaml --task "Your task here"
 - [ ] **Streaming Generation**: Real-time adapter generation
 - [ ] **Auto-scaling**: Dynamic resource allocation for production
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-**Note**: This is a **Rust-only** implementation. The Python training pipeline has been removed for better performance and maintainability. See [MIGRATION.md](MIGRATION.md) for migration options from Python.
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

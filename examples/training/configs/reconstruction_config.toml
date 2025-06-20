@@ -1,0 +1,110 @@
+# Example configuration for reconstruction-based T2L training
+# This configuration trains a hypernetwork to reconstruct LoRA parameters from task embeddings
+
+[model]
+architecture = "hypernetwork"
+size = "medium"
+training_type = "reconstruction"
+checkpoint_path = null  # Set to resume from checkpoint
+
+[hypernetwork]
+model_size = "medium"
+input_dim = 768  # BERT embedding dimension
+lora_rank = 16
+dropout = 0.1
+activation = "gelu"
+
+[optimizer]
+type = "adamw"
+learning_rate = 1e-4
+weight_decay = 0.01
+betas = [0.9, 0.999]
+eps = 1e-8
+
+[optimizer.scheduler]
+type = "cosine"
+num_warmup_steps = 1000
+num_training_steps = 10000
+
+[optimizer.gradient_clipping]
+enabled = true
+method = "global_norm"
+threshold = 1.0
+
+[training]
+num_epochs = 10
+batch_size = 16
+gradient_accumulation_steps = 4
+eval_steps = 500
+save_steps = 1000
+log_steps = 100
+seed = 42
+
+[training.early_stopping]
+enabled = true
+monitor_metric = "eval_loss"
+patience = 3
+min_delta = 0.001
+higher_is_better = false
+
+[data]
+train_data_path = "data/reconstruction/train"
+eval_data_path = "data/reconstruction/val"
+cache_data = true
+num_workers = 4
+shuffle = true
+drop_last = false
+
+[checkpointing]
+save_dir = "checkpoints/reconstruction"
+save_total_limit = 5
+save_best_only = true
+monitor_metric = "eval_loss"
+mode = "min"
+save_on_each_epoch = true
+save_optimizer_state = true
+save_scheduler_state = true
+compression_level = 6
+
+[logging]
+log_dir = "logs/reconstruction"
+log_level = "info"
+log_to_file = true
+log_to_console = true
+report_to = ["tensorboard"]
+logging_steps = 10
+include_system_metrics = true
+
+[mixed_precision]
+enabled = true
+initial_scale = 65536.0
+growth_factor = 2.0
+backoff_factor = 0.5
+growth_interval = 2000
+
+# Reconstruction-specific settings
+[reconstruction]
+layer_weighting = "uniform"  # uniform, exponential, learned
+gradient_accumulation_mode = "fixed"  # fixed, dynamic
+gradient_accumulation_steps = 4
+param_norm_clip = 1.0
+track_param_magnitudes = true
+analyze_gradient_flow = false
+
+[reconstruction.progressive_training]
+enabled = false
+start_layers = 4
+increment_every = 1000
+max_layers = 32
+
+[validation]
+compute_alignment = true
+compute_effective_rank = false
+track_layer_accuracy = true
+best_model_metric = "eval_loss"
+
+[metrics]
+log_param_stats_interval = 100
+log_gradient_flow_interval = 500
+track_memory_usage = true
+enable_profiling = false

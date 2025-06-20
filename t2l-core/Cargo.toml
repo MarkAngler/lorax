@@ -1,0 +1,103 @@
+[package]
+name = "t2l-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["LoRAX Team"]
+license = "MIT OR Apache-2.0"
+default-run = "t2l"
+
+[[bin]]
+name = "t2l"
+path = "src/bin/cli.rs"
+
+[[example]]
+name = "export_ggml"
+path = "examples/export_ggml.rs"
+
+[[example]]
+name = "export_openai"
+path = "examples/export_openai.rs"
+
+[dependencies]
+# Core dependencies
+tokio = { version = "1.35", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+anyhow = "1.0"
+tracing = "0.1"
+rayon = "1.8"
+crossbeam = "0.8"
+dashmap = "5.5"
+parking_lot = "0.12"
+ndarray = "0.15"
+candle-core = "0.9"
+candle-nn = "0.9"
+candle-transformers = "0.9"
+config = "0.13"
+
+# Model loading and inference dependencies
+hf-hub = "0.3"
+safetensors = "0.4"
+tokenizers = { version = "0.20", features = ["http"] }
+
+# Export format dependencies
+prost = "0.12"
+half = "2.4"
+bytemuck = { version = "1.14", features = ["derive"] }
+byteorder = "1.5"
+
+# Sampling and generation dependencies
+rand = "0.9"
+rand_distr = "0.5"
+
+# HTTP for model downloads
+reqwest = { version = "0.11", features = ["json", "stream"] }
+
+# T2L specific dependencies
+lorax = { path = ".." }
+t2l-simd = { path = "../t2l-simd" }
+t2l-cuda = { path = "../t2l-cuda", optional = true }
+
+# Additional production dependencies
+once_cell = "1.20"
+arc-swap = "1.7"
+bytes = "1.7"
+bincode = "1.3"
+zstd = "0.13"
+rustc-hash = "2.0"
+chrono = { version = "0.4", features = ["serde"] }
+num_cpus = "1.16"
+
+# CLI dependencies
+clap = { version = "4.5", features = ["derive", "env", "cargo", "unicode", "wrap_help"] }
+clap_complete = "4.5"
+indicatif = { version = "0.17", features = ["tokio"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+colored = "2.1"
+dialoguer = "0.11"
+console = "0.15"
+directories = "5.0"
+serde_yaml = "0.9"
+toml = "0.8"
+
+# API server dependencies
+axum = { version = "0.7", features = ["json", "tokio", "tower-log", "tracing"] }
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+hyper = { version = "1.0", features = ["full"] }
+uuid = { version = "1.10", features = ["v4", "serde"] }
+
+[features]
+default = ["production"]
+production = ["cuda", "quantization", "cache-all"]
+cuda = ["dep:t2l-cuda", "candle-core/cuda"]
+quantization = []
+cache-all = []
+benchmark = []
+
+[dev-dependencies]
+criterion = "0.5"
+proptest = "1.4"
+approx = "0.5"
+tempfile = "3.10"

@@ -1,0 +1,21 @@
+[package]
+name = "t2l-bench"
+version = "0.1.0"
+edition = "2021"
+authors = ["LoRAX Team"]
+license = "MIT OR Apache-2.0"
+
+# Benchmarks will be added later
+
+[dependencies]
+t2l-core = { path = "../t2l-core", features = ["benchmark"] }
+t2l-simd = { path = "../t2l-simd" }
+t2l-cuda = { path = "../t2l-cuda", optional = true }
+
+criterion = "0.5"
+tokio = { version = "1.35", features = ["full"] }
+ndarray = "0.15"
+serde_json = "1.0"
+
+[features]
+cuda = ["t2l-cuda", "t2l-core/cuda"]

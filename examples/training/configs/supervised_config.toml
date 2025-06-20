@@ -1,0 +1,147 @@
+# Example configuration for supervised fine-tuning with T2L
+# This configuration trains T2L to generate LoRA adapters for downstream tasks
+
+[model]
+architecture = "hypernetwork"
+size = "large"
+training_type = "supervised"
+checkpoint_path = null
+
+[hypernetwork]
+model_size = "large"
+input_dim = 768
+lora_rank = 32
+dropout = 0.1
+activation = "silu"
+target_architecture = "llama"
+
+[base_model]
+model_type = "llama2_7b"
+checkpoint_path = "models/llama2-7b"
+freeze_base = true
+device_map = null  # Auto device placement
+
+[optimizer]
+type = "adamw"
+learning_rate = 5e-5
+weight_decay = 0.01
+betas = [0.9, 0.999]
+eps = 1e-8
+
+[optimizer.scheduler]
+type = "cosine_with_warmup"
+num_warmup_steps = 500
+num_training_steps = 10000
+min_lr_ratio = 0.1
+
+[optimizer.gradient_clipping]
+enabled = true
+method = "global_norm"
+threshold = 1.0
+
+[training]
+num_epochs = 3
+batch_size = 8
+gradient_accumulation_steps = 8
+eval_steps = 250
+save_steps = 500
+log_steps = 50
+seed = 42
+
+[training.early_stopping]
+enabled = true
+monitor_metric = "eval_accuracy"
+patience = 5
+min_delta = 0.001
+higher_is_better = true
+
+[data]
+train_data_path = "data/supervised/train"
+eval_data_path = "data/supervised/val"
+cache_data = true
+num_workers = 4
+shuffle = true
+drop_last = false
+
+[supervised]
+task_type = "classification"  # classification, generation, multi_task
+gradient_accumulation_mode = "dynamic"
+use_gradient_checkpointing = true
+max_sequence_length = 512
+
+# For multi-task learning
+[supervised.multi_task]
+tasks = ["sentiment_analysis", "named_entity_recognition", "question_answering"]
+task_weights = [1.0, 1.5, 2.0]
+
+[supervised.task_balancing]
+strategy = "dynamic_weighting"  # uniform, proportional, dynamic_weighting, uncertainty_weighting
+update_frequency = 100
+smoothing_factor = 0.9
+
+[lora_adaptation]
+apply_to_layers = [
+    "self_attn.q_proj",
+    "self_attn.k_proj", 
+    "self_attn.v_proj",
+    "self_attn.o_proj",
+    "mlp.gate_proj",
+    "mlp.up_proj",
+    "mlp.down_proj"
+]
+alpha = 32.0
+dropout = 0.05
+merge_weights = false
+
+[lora_adaptation.init_strategy]
+type = "gaussian"
+std = 0.02
+
+[lora_adaptation.rank_allocation]
+type = "adaptive"
+min_rank = 8
+max_rank = 64
+importance_threshold = 0.1
+
+[validation]
+evaluation_mode = "full"
+compute_perplexity = true
+compute_task_metrics = true
+track_layer_metrics = true
+best_model_metric = "eval_accuracy"
+use_teacher_forcing = true
+temperature = 1.0
+
+[checkpointing]
+save_dir = "checkpoints/supervised"
+save_total_limit = 3
+save_best_only = true
+monitor_metric = "eval_accuracy"
+mode = "max"
+save_on_each_epoch = true
+save_optimizer_state = true
+save_scheduler_state = true
+compression_level = 6
+
+[logging]
+log_dir = "logs/supervised"
+log_level = "info"
+log_to_file = true
+log_to_console = true
+report_to = ["tensorboard", "wandb"]
+logging_steps = 10
+include_system_metrics = true
+
+[mixed_precision]
+enabled = true
+initial_scale = 65536.0
+growth_factor = 2.0
+backoff_factor = 0.5
+growth_interval = 2000
+
+[metrics]
+log_param_stats_interval = 100
+log_gradient_flow_interval = 200
+track_memory_usage = true
+enable_profiling = false
+track_activation_stats = true

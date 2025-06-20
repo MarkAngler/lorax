@@ -1,0 +1,282 @@
+# Example configuration for multi-task learning with T2L
+# This configuration trains T2L to handle multiple tasks simultaneously
+
+[model]
+architecture = "hypernetwork"
+size = "xlarge"
+training_type = "supervised"
+checkpoint_path = null
+
+[hypernetwork]
+model_size = "xlarge"
+input_dim = 1024  # Larger embedding for task diversity
+lora_rank = 64
+dropout = 0.1
+activation = "gelu"
+target_architecture = "llama"
+# Multi-task specific settings
+task_embedding_dim = 256
+num_tasks = 5
+use_task_embeddings = true
+task_mixing_alpha = 0.3
+
+[base_model]
+model_type = "llama2_13b"
+checkpoint_path = "models/llama2-13b"
+freeze_base = true
+
+# Model parallelism for large models
+[base_model.device_map]
+embeddings = 0
+"layers.0-15" = 0
+"layers.16-31" = 1
+"layers.32-39" = 1
+output = 1
+
+[optimizer]
+type = "adamw"
+learning_rate = 3e-5
+weight_decay = 0.05
+betas = [0.9, 0.999]
+eps = 1e-8
+
+[optimizer.scheduler]
+type = "polynomial_decay"
+num_warmup_steps = 2000
+num_training_steps = 50000
+power = 1.0
+end_lr = 1e-6
+
+[optimizer.gradient_clipping]
+enabled = true
+method = "adaptive_norm"
+threshold = 1.0
+percentile = 90.0
+history_size = 1000
+
+[training]
+num_epochs = 5
+batch_size = 4
+gradient_accumulation_steps = 16
+eval_steps = 500
+save_steps = 1000
+log_steps = 25
+max_steps = 50000
+seed = 42
+
+[training.early_stopping]
+enabled = true
+monitor_metric = "eval_avg_task_performance"
+patience = 10
+min_delta = 0.0005
+higher_is_better = true
+
+[data]
+train_data_path = "data/multi_task/train"
+eval_data_path = "data/multi_task/val"
+cache_data = true
+num_workers = 8
+shuffle = true
+drop_last = false
+
+[supervised]
+task_type = "multi_task"
+use_gradient_checkpointing = true
+max_sequence_length = 512
+
+[supervised.multi_task]
+tasks = ["sentiment", "nli", "qa", "summarization", "ner"]
+task_weights = [1.0, 1.5, 2.0, 1.8, 1.2]
+
+# Task-specific gradient accumulation
+[supervised.gradient_accumulation]
+mode = "task_adaptive"
+base_steps = 4
+[supervised.gradient_accumulation.task_scaling]
+qa = 2.0
+summarization = 1.5
+ner = 1.2
+sentiment = 0.8
+nli = 1.0
+
+# Dynamic task balancing
+[supervised.task_balancing]
+strategy = "uncertainty_weighting"
+update_frequency = 100
+temperature = 2.0
+[supervised.task_balancing.initial_weights]
+sentiment = 1.0
+nli = 1.5
+qa = 2.0
+summarization = 1.8
+ner = 1.2
+
+# Auxiliary objectives for multi-task learning
+[[supervised.auxiliary_objectives]]
+type = "task_similarity"
+weight = 0.1
+distance_metric = "cosine"
+
+[[supervised.auxiliary_objectives]]
+type = "gradient_alignment"
+weight = 0.05
+target_alignment = 0.8
+
+[[supervised.auxiliary_objectives]]
+type = "parameter_regularization"
+weight = 0.1
+reg_type = "l2"
+
+[lora_adaptation]
+apply_to_layers = [
+    "self_attn.q_proj",
+    "self_attn.k_proj",
+    "self_attn.v_proj",
+    "self_attn.o_proj",
+    "mlp.gate_proj",
+    "mlp.up_proj",
+    "mlp.down_proj"
+]
+alpha = 64.0
+dropout = 0.05
+merge_weights = false
+
+# Task-aware initialization
+[lora_adaptation.init_strategy]
+type = "task_aware"
+base_std = 0.02
+[lora_adaptation.init_strategy.task_specific_std]
+qa = 0.03
+summarization = 0.025
+ner = 0.02
+sentiment = 0.015
+nli = 0.02
+
+# Task-specific rank allocation
+[lora_adaptation.rank_allocation]
+type = "task_specific"
+base_rank = 32
+dynamic_adjustment = true
+[lora_adaptation.rank_allocation.task_ranks]
+qa = 64
+summarization = 48
+ner = 32
+sentiment = 16
+nli = 32
+
+[validation]
+evaluation_mode = "task_stratified"
+samples_per_task = 1000
+balanced = true
+compute_perplexity = true
+compute_task_metrics = true
+track_layer_metrics = true
+best_model_metric = "eval_avg_task_performance"
+eval_batch_size = 8
+use_teacher_forcing = true
+temperature = 1.0
+
+# Task-specific metrics
+[validation.task_specific_metrics]
+sentiment = ["accuracy", "f1_macro"]
+nli = ["accuracy", "confusion_matrix"]
+qa = ["exact_match", "f1_score"]
+summarization = ["rouge1", "rouge2", "rougeL"]
+ner = ["entity_f1", "entity_precision", "entity_recall"]
+
+[regularization]
+l2_lambda = 0.01
+l1_lambda = 0.0
+dropout_rate = 0.1
+label_smoothing = 0.1
+spectral_norm = false
+
+# Multi-task specific regularization
+[[regularization.types]]
+type = "task_orthogonality"
+lambda = 0.1
+apply_to = ["lora_weights"]
+
+[[regularization.types]]
+type = "parameter_diversity"
+lambda = 0.05
+temperature = 1.0
+
+[checkpointing]
+save_dir = "checkpoints/multi_task"
+save_total_limit = 5
+save_best_only = false
+monitor_metric = "eval_avg_task_performance"
+mode = "max"
+save_on_each_epoch = true
+save_optimizer_state = true
+save_scheduler_state = true
+compression_level = 6
+
+[logging]
+log_dir = "logs/multi_task"
+log_level = "info"
+log_to_file = true
+log_to_console = true
+report_to = ["tensorboard", "wandb"]
+logging_steps = 10
+include_system_metrics = true
+
+[mixed_precision]
+enabled = true
+initial_scale = 65536.0
+growth_factor = 2.0
+backoff_factor = 0.5
+growth_interval = 2000
+
+[metrics]
+log_param_stats_interval = 100
+log_gradient_flow_interval = 200
+track_memory_usage = true
+enable_profiling = true
+track_activation_stats = true
+task_specific_tracking = true
+cross_task_metrics = true
+
+# Data sampling configuration
+[data.sampling]
+strategy = "proportional_to_size"
+temperature = 0.75
+min_probability = 0.1
+
+# Task configurations
+[[tasks]]
+name = "sentiment"
+data_path = "data/tasks/sentiment"
+weight = 1.0
+max_samples = 50000
+task_type = "classification"
+num_labels = 3
+
+[[tasks]]
+name = "nli"
+data_path = "data/tasks/nli"
+weight = 1.5
+max_samples = 100000
+task_type = "classification"
+num_labels = 3
+
+[[tasks]]
+name = "qa"
+data_path = "data/tasks/squad"
+weight = 2.0
+task_type = "generation"
+
+[[tasks]]
+name = "summarization"
+data_path = "data/tasks/cnn_dailymail"
+weight = 1.8
+max_samples = 30000
+task_type = "generation"
+
+[[tasks]]
+name = "ner"
+data_path = "data/tasks/conll2003"
+weight = 1.2
+task_type = "token_classification"
+num_labels = 9

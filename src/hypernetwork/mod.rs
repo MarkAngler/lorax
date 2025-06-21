@@ -16,6 +16,7 @@ pub use architectures::{TargetArchitecture, ArchitectureHandler};
 use anyhow::Result;
 use ndarray::Array1;
 use serde::{Deserialize, Serialize};
+use tracing::info;
 
 /// Configuration for the hypernetwork
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -25,6 +26,7 @@ pub struct HypernetworkConfig {
     pub lora_rank: usize,
     pub dropout: f32,
     pub activation: ActivationType,
+    pub target_architecture: TargetArchitecture,
 }
 
 impl Default for HypernetworkConfig {
@@ -35,6 +37,11 @@ impl Default for HypernetworkConfig {
             lora_rank: 16,
             dropout: 0.1,
             activation: ActivationType::ReLU,
+            target_architecture: TargetArchitecture::GPT {
+                hidden_size: 768,
+                num_layers: 12,
+                num_heads: 12,
+            },
         }
     }
 }
@@ -57,9 +64,19 @@ pub struct HyperNetwork {
 impl HyperNetwork {
     /// Create a new hypernetwork with the given configuration
     pub fn new(config: HypernetworkConfig) -> Result<Self> {
-        let model = HyperNetworkModel::new(&config)?;
-        let lora_generator = LoRAGenerator::new(config.lora_rank);
+        // Initialize architecture handler and LoRA generator
         let architecture_handler = ArchitectureHandler::new();
+        let lora_generator = LoRAGenerator::new(config.lora_rank);
+        
+        // Get layer configurations for the target architecture
+        let layer_configs = architecture_handler.get_layer_configs(&config.target_architecture)?;
+        
+        // Calculate the output dimension based on all layers
+        let output_dim = lora_generator.calculate_output_size(&layer_configs);
+        info!("Calculated output dimension: {} for architecture: {:?}", output_dim, config.target_architecture);
+        
+        // Create the hypernetwork model with the calculated output dimension
+        let model = HyperNetworkModel::new(&config, output_dim)?;
 
         Ok(Self {
             config,

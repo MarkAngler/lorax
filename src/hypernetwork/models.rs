@@ -99,14 +99,10 @@ pub struct HyperNetworkModel {
 }
 
 impl HyperNetworkModel {
-    pub fn new(config: &HypernetworkConfig) -> Result<Self> {
+    pub fn new(config: &HypernetworkConfig, output_dim: usize) -> Result<Self> {
         let num_layers = config.model_size.num_layers();
         let hidden_dim = config.model_size.hidden_dim();
         let input_dim = config.input_dim;
-        
-        // Calculate output dimension based on LoRA rank and typical layer sizes
-        // This will be dynamically adjusted based on target architecture
-        let output_dim = hidden_dim * 2;  // Base output dimension
         
         let mut layers = Vec::new();
         let mut layer_norms = Vec::new();

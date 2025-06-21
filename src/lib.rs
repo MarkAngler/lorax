@@ -67,6 +67,7 @@ impl TextToLora {
             lora_rank: config.hypernetwork.lora_rank,
             dropout: config.hypernetwork.dropout,
             activation: config.hypernetwork.activation.to_hypernetwork_activation(),
+            target_architecture: config.hypernetwork.target_architecture.clone(),
         };
         let hypernetwork = hypernetwork::HyperNetwork::new(hypernetwork_config)?;
         debug!("Hypernetwork initialized");

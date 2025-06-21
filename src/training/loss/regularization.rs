@@ -4,12 +4,12 @@
 //! L1/L2 penalties, dropout, weight decay, and LoRA-specific regularization.
 
 use super::{RegularizationConfig, LoraRegularizationConfig, LossMetrics};
-use crate::training::{Result, Error};
-use candle_core::{Tensor, Device, DType, D};
+use crate::training::Result;
+use candle_core::{Tensor, Device, D};
 use candle_nn as nn;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use anyhow::{Context, anyhow};
+use anyhow::Context;
 use tracing::{debug, instrument};
 
 /// Comprehensive regularization penalty computation
@@ -173,7 +173,7 @@ impl RegularizationPenalties {
             return Ok(tensor.clone());
         }
         
-        nn::ops::dropout(tensor, dropout_prob)
+        nn::ops::dropout(tensor, dropout_prob as f32)
             .context("Failed to apply dropout")
     }
     
@@ -325,7 +325,7 @@ impl LoraRegularizer {
             
             // Create identity matrix of same size
             let rank = at_a.dim(0)?;
-            let identity = Tensor::eye(rank, at_a.device())?;
+            let identity = Tensor::eye(rank, at_a.dtype(), at_a.device())?;
             
             // Orthogonality loss: ||A^T * A - I||_F^2
             let diff = (at_a - identity)?;
@@ -549,7 +549,7 @@ impl WeightDecayScheduler {
                 self.initial_decay * 0.5 * (1.0 + (std::f64::consts::PI * progress).cos())
             },
             DecayScheduleType::Step => {
-                let step_size = self.schedule_params.get("step_size").unwrap_or(&1000.0) as usize;
+                let step_size = (*self.schedule_params.get("step_size").unwrap_or(&1000.0)) as usize;
                 let decay_factor = self.schedule_params.get("decay_factor").unwrap_or(&0.1);
                 let num_decays = step / step_size;
                 self.initial_decay * decay_factor.powf(num_decays as f64)

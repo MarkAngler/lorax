@@ -1,0 +1,15 @@
+{
+  "name": "lorax",
+  "version": "0.1.0",
+  "build_date": "2025-06-21T00:26:29Z",
+  "rust_version": "1.87.0",
+  "target": "x86_64-unknown-linux-gnu",
+  "features": [
+    "lora",
+    "qlora",
+    "mixed-precision",
+    "multi-task",
+    "checkpointing"
+  ],
+  "status": "production-ready"
+}

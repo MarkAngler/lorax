@@ -6,6 +6,7 @@
 use anyhow::Result;
 use candle_core::Tensor;
 use std::collections::HashMap;
+use std::sync::Arc;
 
 pub mod datasets;
 pub mod loaders;
@@ -34,6 +35,44 @@ pub trait Dataset: Send + Sync {
     
     /// Get dataset metadata
     fn metadata(&self) -> &DatasetMetadata;
+}
+
+/// Blanket implementation for Box<dyn Dataset>
+impl Dataset for Box<dyn Dataset> {
+    fn len(&self) -> usize {
+        (**self).len()
+    }
+    
+    fn is_empty(&self) -> bool {
+        (**self).is_empty()
+    }
+    
+    fn get(&self, index: usize) -> Result<DataSample> {
+        (**self).get(index)
+    }
+    
+    fn metadata(&self) -> &DatasetMetadata {
+        (**self).metadata()
+    }
+}
+
+/// Blanket implementation for Arc<dyn Dataset>
+impl Dataset for Arc<dyn Dataset> {
+    fn len(&self) -> usize {
+        (**self).len()
+    }
+    
+    fn is_empty(&self) -> bool {
+        (**self).is_empty()
+    }
+    
+    fn get(&self, index: usize) -> Result<DataSample> {
+        (**self).get(index)
+    }
+    
+    fn metadata(&self) -> &DatasetMetadata {
+        (**self).metadata()
+    }
 }
 
 /// Represents a single training sample

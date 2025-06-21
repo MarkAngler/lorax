@@ -2,7 +2,6 @@
 
 use anyhow::Result;
 use tokenizers::{Tokenizer, Encoding};
-use std::collections::HashMap;
 
 /// Configuration for tokenizer
 #[derive(Debug, Clone)]
@@ -40,9 +39,8 @@ impl BertTokenizer {
             ..Default::default()
         };
         
-        // TODO: Load actual tokenizer from HuggingFace
-        // For now, create a placeholder
-        let tokenizer = Tokenizer::from_file("tokenizer.json")
+        // Load tokenizer from HuggingFace Hub
+        let tokenizer = Tokenizer::from_pretrained(model_name, None)
             .map_err(|e| anyhow::anyhow!("Failed to load tokenizer: {}", e))?;
         
         Ok(Self { tokenizer, config })
@@ -91,7 +89,7 @@ impl TokenizedInput {
         Self {
             input_ids: encoding.get_ids().to_vec(),
             attention_mask: encoding.get_attention_mask().to_vec(),
-            token_type_ids: encoding.get_type_ids().map(|ids| ids.to_vec()),
+            token_type_ids: Some(encoding.get_type_ids().to_vec()),
         }
     }
     

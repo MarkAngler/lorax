@@ -4,7 +4,7 @@
 //! fine-tuning of models with LoRA adaptations.
 
 use super::{LossFunction, LossConfig, LossMetrics, SupervisedTaskType, ReductionMethod};
-use crate::training::{Result, Error};
+use crate::training::Result;
 use crate::training::data::SupervisedBatch;
 use candle_core::{Tensor, Device, DType, D};
 use candle_nn as nn;
@@ -149,10 +149,12 @@ impl CrossEntropyLoss {
         let one_hot_final = one_hot_expanded.scatter_add(&one_hot, &Tensor::ones_like(&one_hot)?, D::Minus1)?;
         
         // Apply label smoothing
-        let smooth_labels = &one_hot_final * (1.0 - smoothing) + smoothing / num_classes as f64;
+        let smooth_labels = ((&one_hot_final * (1.0 - smoothing))? + smoothing / num_classes as f64)?;
         
         // Compute loss
-        let loss = -(&log_probs * &smooth_labels)?.sum_keepdim(D::Minus1)?;
+        let loss_product = (&log_probs * &smooth_labels)?;
+        let loss_sum = loss_product.sum_keepdim(D::Minus1)?;
+        let loss = (Tensor::zeros_like(&loss_sum)? - loss_sum)?;
         Ok(loss)
     }
     
@@ -333,11 +335,11 @@ impl SequenceLabelingLoss {
         let loss = nn::loss::cross_entropy(&flat_logits, &flat_labels)?;
         
         // Apply mask to ignore padded positions
-        let masked_loss = &loss * &flat_mask;
+        let masked_loss = (&loss * &flat_mask)?;
         let num_valid = flat_mask.sum_all()?;
         
         // Return mean over valid positions
-        Ok(masked_loss.sum_all()? / num_valid)
+        Ok((masked_loss.sum_all()? / num_valid)?)
     }
     
     fn compute_sequence_accuracy(
@@ -352,10 +354,11 @@ impl SequenceLabelingLoss {
         
         if let Some(mask) = attention_mask {
             let mask_expanded = mask.unsqueeze(D::Minus1)?.to_dtype(DType::F32)?;
-            let masked_correct = &correct * &mask_expanded;
+            let masked_correct = (&correct * &mask_expanded)?;
             let total_correct = masked_correct.sum_all()?;
             let total_valid = mask.sum_all()?.to_dtype(DType::F32)?;
-            Ok((total_correct / total_valid).to_scalar::<f64>()?)
+            let result = (total_correct / total_valid)?;
+            Ok(result.to_scalar::<f64>()?)
         } else {
             Ok(correct.mean_all()?.to_scalar::<f64>()?)
         }
@@ -432,11 +435,11 @@ impl MaskedLMLoss {
         let loss = nn::loss::cross_entropy(&flat_logits, &flat_labels)?;
         
         // Apply mask to compute loss only on masked positions
-        let masked_loss = &loss * &flat_mask;
+        let masked_loss = (&loss * &flat_mask)?;
         let num_masked = flat_mask.sum_all()?;
         
         // Return mean over masked positions
-        Ok(masked_loss.sum_all()? / num_masked)
+        Ok((masked_loss.sum_all()? / num_masked)?)
     }
     
     fn compute_masked_accuracy(&self, logits: &Tensor, labels: &Tensor, mask: &Tensor) -> Result<f64> {
@@ -445,11 +448,12 @@ impl MaskedLMLoss {
         let correct = predictions.eq(&labels_expanded)?.to_dtype(DType::F32)?;
         let mask_expanded = mask.unsqueeze(D::Minus1)?.to_dtype(DType::F32)?;
         
-        let masked_correct = &correct * &mask_expanded;
+        let masked_correct = (&correct * &mask_expanded)?;
         let total_correct = masked_correct.sum_all()?;
         let total_masked = mask.sum_all()?.to_dtype(DType::F32)?;
         
-        Ok((total_correct / total_masked).to_scalar::<f64>()?)
+        let result = (total_correct / total_masked)?;
+        Ok(result.to_scalar::<f64>()?)
     }
 }
 

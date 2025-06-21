@@ -2,7 +2,6 @@
 
 use anyhow::Result;
 use candle_core::{Tensor, Device};
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub mod parameters;
@@ -14,7 +13,7 @@ pub use generation::LoraGenerator;
 pub use config::{LoraConfig, BiasType};
 
 /// LoRA weight matrices
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct LoraWeights {
     /// A matrix (input_dim x rank)
     pub a: Tensor,
@@ -48,27 +47,29 @@ impl LoraWeights {
         // input @ A @ B * alpha
         let temp = input.matmul(&self.a)?;
         let output = temp.matmul(&self.b)?;
-        output.mul(&Tensor::new(self.alpha, input.device())?)
+        let alpha_tensor = Tensor::new(self.alpha, input.device())?;
+        Ok(output.mul(&alpha_tensor)?)
     }
     
     /// Get merged weight matrix (for inference optimization)
     pub fn get_merged_weights(&self) -> Result<Tensor> {
         // A @ B * alpha
         let merged = self.a.matmul(&self.b)?;
-        merged.mul(&Tensor::new(self.alpha, self.a.device())?)
+        let alpha_tensor = Tensor::new(self.alpha, self.a.device())?;
+        Ok(merged.mul(&alpha_tensor)?)
     }
     
     /// Update from raw parameters
     pub fn update_from_params(&mut self, a_weights: &[f32], b_weights: &[f32]) -> Result<()> {
-        let device = self.a.device();
+        let device = self.a.device().clone();
         
         // Reshape and update A matrix
-        let a_shape = self.a.dims();
-        self.a = Tensor::from_slice(a_weights, a_shape, device)?;
+        let a_shape = self.a.dims().to_vec();
+        self.a = Tensor::from_slice(a_weights, &*a_shape, &device)?;
         
         // Reshape and update B matrix
-        let b_shape = self.b.dims();
-        self.b = Tensor::from_slice(b_weights, b_shape, device)?;
+        let b_shape = self.b.dims().to_vec();
+        self.b = Tensor::from_slice(b_weights, &*b_shape, &device)?;
         
         Ok(())
     }
@@ -210,7 +211,7 @@ impl LoraModel {
         if let Some(adapter) = self.get_adapter(layer_name) {
             let lora_output = adapter.forward(input)?;
             // Add to original input (residual connection)
-            input.add(&lora_output)
+            Ok(input.add(&lora_output)?)
         } else {
             Ok(input.clone())
         }

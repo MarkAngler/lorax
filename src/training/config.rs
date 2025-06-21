@@ -8,6 +8,7 @@ use std::path::PathBuf;
 use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use anyhow::{Result, Context};
+use crate::training::loss::LossConfig;
 
 /// Main training configuration
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -38,6 +39,9 @@ pub struct TrainingConfig {
     
     /// Runtime configuration
     pub runtime: RuntimeConfig,
+    
+    /// Loss function configuration
+    pub loss: LossConfig,
 }
 
 /// Model-specific configuration
@@ -844,6 +848,7 @@ impl Default for TrainingConfig {
             mixed_precision: MixedPrecisionConfig::default(),
             regularization: RegularizationConfig::default(),
             runtime: RuntimeConfig::default(),
+            loss: LossConfig::default(),
         }
     }
 }

@@ -1,0 +1,59 @@
+{
+  "encoder": {
+    "encoder_type": "bert",
+    "model_name": "bert-base-uncased",
+    "embedding_dim": 768,
+    "max_sequence_length": 512,
+    "pooling_strategy": "mean",
+    "cache_dir": null
+  },
+  "projection": {
+    "input_dim": 768,
+    "output_dim": 512,
+    "activation": "relu",
+    "dropout": 0.1,
+    "use_batch_norm": true
+  },
+  "hypernetwork": {
+    "model_size": "small",
+    "input_dim": 512,
+    "hidden_dims": [512, 256],
+    "output_dim": 4096,
+    "activation": "gelu",
+    "dropout": 0.1,
+    "use_residual": true,
+    "use_layer_norm": true,
+    "lora_rank": 16,
+    "target_architecture": {
+      "LLaMA": {
+        "hidden_size": 768,
+        "num_layers": 12,
+        "num_heads": 12,
+        "intermediate_size": 3072
+      }
+    }
+  },
+  "lora": {
+    "rank": 16,
+    "alpha": 32.0,
+    "target_modules": ["q_proj", "v_proj"],
+    "model_dim": 768,
+    "init_strategy": "kaiming",
+    "use_bias": false
+  },
+  "system": {
+    "num_threads": 4,
+    "batch_size": 4,
+    "max_concurrent_requests": 100,
+    "enable_metrics": true,
+    "metrics_port": 9090,
+    "log_level": "info",
+    "model_cache_size_mb": 1024,
+    "device": {
+      "device_type": "cpu",
+      "device_id": 0,
+      "mixed_precision": false,
+      "memory_fraction": 0.9
+    }
+  }
+}

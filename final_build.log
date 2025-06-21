@@ -1,0 +1,895 @@
+   Compiling lorax v0.1.0 (/workspaces/lorax)
+error: expected expression, found `let` statement
+   --> src/training/optimizers/adamw.rs:112:9
+    |
+112 |         let sqrt_variance = corrected_variance.sqrt()?;
+    |         ^^^
+    |
+    = note: only supported directly in conditions of `if` and `while` expressions
+
+error: expected `;`, found keyword `let`
+   --> src/training/optimizers/adamw.rs:109:77
+    |
+109 |         let corrected_variance = (&new_variance * (1.0 / bias_correction2))?
+    |                                                                             ^ help: add `;` here
+...
+112 |         let sqrt_variance = corrected_variance.sqrt()?;
+    |         --- unexpected token
+
+warning: unused import: `ParameterMetadata`
+ --> src/lora/generation.rs:4:46
+  |
+4 | use super::parameters::{LoraParameterConfig, ParameterMetadata};
+  |                                              ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `std::collections::HashMap`
+ --> src/lora/config.rs:4:5
+  |
+4 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `candle_nn::Module`
+ --> src/models/mod.rs:8:5
+  |
+8 | use candle_nn::Module;
+  |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `VarBuilder`
+ --> src/projection.rs:5:25
+  |
+5 | use candle_nn::{Linear, VarBuilder, Module};
+  |                         ^^^^^^^^^^
+
+warning: unused imports: `DateTime` and `Utc`
+ --> src/training/config.rs:8:14
+  |
+8 | use chrono::{DateTime, Utc};
+  |              ^^^^^^^^  ^^^
+
+warning: unused import: `Rng`
+  --> src/training/trainer.rs:16:12
+   |
+16 | use rand::{Rng, SeedableRng};
+   |            ^^^
+
+warning: unused import: `warn`
+  --> src/training/trainer.rs:20:35
+   |
+20 | use tracing::{debug, error, info, warn};
+   |                                   ^^^^
+
+warning: unused import: `PathBuf`
+ --> src/training/trainers/reconstruction.rs:8:23
+  |
+8 | use std::path::{Path, PathBuf};
+  |                       ^^^^^^^
+
+warning: unused import: `DateTime`
+  --> src/training/trainers/reconstruction.rs:15:14
+   |
+15 | use chrono::{DateTime, Utc};
+   |              ^^^^^^^^
+
+warning: unused import: `warn`
+  --> src/training/trainers/reconstruction.rs:19:35
+   |
+19 | use tracing::{debug, error, info, warn, instrument};
+   |                                   ^^^^
+
+warning: unused import: `HypernetworkConfig`
+  --> src/training/trainers/reconstruction.rs:21:41
+   |
+21 | use crate::hypernetwork::{HyperNetwork, HypernetworkConfig, TargetArchitecture};
+   |                                         ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::lora::parameters::LoraParameters`
+  --> src/training/trainers/reconstruction.rs:22:5
+   |
+22 | use crate::lora::parameters::LoraParameters;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `MemoryUsage` and `T2LTrainer`
+  --> src/training/trainers/reconstruction.rs:25:5
+   |
+25 |     T2LTrainer, MemoryUsage, ReconstructionBatch,
+   |     ^^^^^^^^^^  ^^^^^^^^^^^
+
+warning: unused import: `DateTime`
+  --> src/training/trainers/supervised.rs:15:14
+   |
+15 | use chrono::{DateTime, Utc};
+   |              ^^^^^^^^
+
+warning: unused import: `warn`
+  --> src/training/trainers/supervised.rs:19:35
+   |
+19 | use tracing::{debug, error, info, warn, instrument};
+   |                                   ^^^^
+
+warning: unused import: `HypernetworkConfig`
+  --> src/training/trainers/supervised.rs:21:41
+   |
+21 | use crate::hypernetwork::{HyperNetwork, HypernetworkConfig, TargetArchitecture};
+   |                                         ^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `LoraConfig` and `LoraLayer`
+  --> src/training/trainers/supervised.rs:22:19
+   |
+22 | use crate::lora::{LoraLayer, LoraConfig, LoraAdapter};
+   |                   ^^^^^^^^^  ^^^^^^^^^^
+
+warning: unused imports: `ModelOutput` and `create_base_model`
+  --> src/training/trainers/supervised.rs:23:56
+   |
+23 | use crate::models::{BaseModel, ModelConfig, ModelType, ModelOutput, create_base_model};
+   |                                                        ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `MemoryUsage` and `T2LTrainer`
+  --> src/training/trainers/supervised.rs:26:5
+   |
+26 |     T2LTrainer, MemoryUsage, SupervisedBatch,
+   |     ^^^^^^^^^^  ^^^^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+  --> src/training/checkpoints/manager.rs:10:5
+   |
+10 | use std::sync::Arc;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `error`
+  --> src/training/checkpoints/manager.rs:17:34
+   |
+17 | use tracing::{debug, info, warn, error};
+   |                                  ^^^^^
+
+warning: unused import: `CheckpointMetadata`
+  --> src/training/checkpoints/manager.rs:20:56
+   |
+20 | use super::{TrainingCheckpoint, CheckpointLoadOptions, CheckpointMetadata};
+   |                                                        ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `CheckpointMetadata`
+  --> src/training/checkpoints/recovery.rs:18:33
+   |
+18 | use super::{TrainingCheckpoint, CheckpointMetadata};
+   |                                 ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `super::metadata::ValidationStatus`
+  --> src/training/checkpoints/recovery.rs:19:5
+   |
+19 | use super::metadata::ValidationStatus;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::path::PathBuf`
+  --> src/training/checkpoints/mod.rs:16:5
+   |
+16 | use std::path::PathBuf;
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `error`
+  --> src/training/metrics/tracker.rs:13:34
+   |
+13 | use tracing::{debug, info, warn, error};
+   |                                  ^^^^^
+
+warning: unused imports: `PerformanceMetrics` and `SystemMetrics`
+  --> src/training/metrics/collectors.rs:11:43
+   |
+11 | use super::{TrainingMetrics, LossMetrics, PerformanceMetrics, ModelMetrics, SystemMetrics};
+   |                                           ^^^^^^^^^^^^^^^^^^                ^^^^^^^^^^^^^
+
+warning: unused import: `std::collections::VecDeque`
+ --> src/training/metrics/exporters.rs:7:5
+  |
+7 | use std::collections::VecDeque;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `Instant`
+  --> src/training/metrics/mod.rs:24:27
+   |
+24 | use std::time::{Duration, Instant};
+   |                           ^^^^^^^
+
+warning: unused import: `Tensor`
+  --> src/training/optimizers/mod.rs:22:19
+   |
+22 | use candle_core::{Tensor, Device};
+   |                   ^^^^^^
+
+warning: unused import: `VarBuilder`
+  --> src/training/optimizers/mod.rs:23:25
+   |
+23 | use candle_nn::{VarMap, VarBuilder};
+   |                         ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+ --> src/hypernetwork/models.rs:7:11
+  |
+7 | use rand::thread_rng;
+  |           ^^^^^^^^^^
+  |
+  = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+  --> src/hypernetwork/models.rs:48:23
+   |
+48 |         let mut rng = thread_rng();
+   |                       ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/hypernetwork/models.rs:173:23
+    |
+173 |         let mut rng = thread_rng();
+    |                       ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+  --> src/lora/parameters.rs:62:29
+   |
+62 |         let mut rng = rand::thread_rng();
+   |                             ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/lora/generation.rs:356:29
+    |
+356 |         let mut rng = rand::thread_rng();
+    |                             ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/utils.rs:366:29
+    |
+366 |         let mut rng = rand::thread_rng();
+    |                             ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/utils.rs:376:29
+    |
+376 |         let mut rng = rand::thread_rng();
+    |                             ^^^^^^^^^^
+
+warning: unused variable: `lora_params_raw`
+   --> src/lib.rs:107:13
+    |
+107 |         let lora_params_raw = self.hypernetwork.generate_lora_params(&projected_array, target_arch)?;
+    |             ^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_lora_params_raw`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `eval_metrics`
+   --> src/training/trainer.rs:451:25
+    |
+451 |                     let eval_metrics = self.evaluate().await?;
+    |                         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_eval_metrics`
+
+error[E0382]: borrow of moved value: `loss`
+   --> src/training/trainer.rs:437:24
+    |
+403 |             let loss = match &self.config.model.training_type {
+    |                 ---- move occurs because `loss` has type `candle_core::Tensor`, which does not implement the `Copy` trait
+...
+426 |             self.backward_step(loss)?;
+    |                                ---- value moved here
+...
+437 |                        loss.to_scalar::<f64>()?, 
+    |                        ^^^^ value borrowed here after move
+    |
+note: consider changing this parameter type in method `backward_step` to borrow instead if owning the value isn't necessary
+   --> src/training/trainer.rs:535:39
+    |
+535 |     fn backward_step(&mut self, loss: Tensor) -> Result<()> {
+    |        ------------- in this method   ^^^^^^ this parameter takes ownership of the value
+help: consider cloning the value if the performance cost is acceptable
+    |
+426 |             self.backward_step(loss.clone())?;
+    |                                    ++++++++
+
+warning: variable does not need to be mutable
+   --> src/training/trainer.rs:585:13
+    |
+585 |         let mut val_loader = self.val_loader.take().unwrap();
+    |             ----^^^^^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+warning: unused variable: `eval_metrics`
+   --> src/training/trainers/reconstruction.rs:746:25
+    |
+746 |                     let eval_metrics = self.evaluate().await?;
+    |                         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_eval_metrics`
+
+warning: unused variable: `var`
+   --> src/training/trainers/reconstruction.rs:716:58
+    |
+716 |                 self.var_map.all_vars().iter().for_each(|var| {
+    |                                                          ^^^ help: if this is intentional, prefix it with an underscore: `_var`
+
+error[E0382]: borrow of moved value: `gradients`
+   --> src/training/trainers/reconstruction.rs:706:50
+    |
+685 |             let gradients = final_loss.backward()?;
+    |                 ---------   ---------------------- this reinitialization might get skipped
+    |                 |
+    |                 move occurs because `gradients` has type `GradStore`, which does not implement the `Copy` trait
+...
+698 |                     let mut grad_store = gradients;
+    |                                          --------- value moved here
+...
+706 |                     self.apply_gradient_clipping(&gradients)?;
+    |                                                  ^^^^^^^^^^ value borrowed here after move
+
+error[E0502]: cannot borrow `*self` as immutable because it is also borrowed as mutable
+   --> src/training/trainers/reconstruction.rs:972:41
+    |
+965 |         let val_loader = self.val_loader.as_mut().unwrap();
+    |                          --------------- mutable borrow occurs here
+966 |         
+967 |         while let Some(batch) = val_loader.next_batch().await? {
+    |                                 ---------- mutable borrow later used here
+...
+972 |             let (_loss, loss_metrics) = self.reconstruction_step_eval(*batch)?;
+    |                                         ^^^^ immutable borrow occurs here
+
+warning: unused variable: `eval_metrics`
+   --> src/training/trainers/supervised.rs:771:25
+    |
+771 |                     let eval_metrics = self.evaluate().await?;
+    |                         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_eval_metrics`
+
+warning: unused variable: `var`
+   --> src/training/trainers/supervised.rs:740:54
+    |
+740 |             self.var_map.all_vars().iter().for_each(|var| {
+    |                                                      ^^^ help: if this is intentional, prefix it with an underscore: `_var`
+
+error[E0502]: cannot borrow `*self` as immutable because it is also borrowed as mutable
+   --> src/training/trainers/supervised.rs:984:35
+    |
+977 |         let val_loader = self.val_loader.as_mut().unwrap();
+    |                          --------------- mutable borrow occurs here
+978 |         
+979 |         while let Some(batch) = val_loader.next_batch().await? {
+    |                                 ---------- mutable borrow later used here
+...
+984 |             let tokenized_batch = self.tokenize_batch(&*batch)?;
+    |                                   ^^^^ immutable borrow occurs here
+
+error[E0502]: cannot borrow `*self` as immutable because it is also borrowed as mutable
+   --> src/training/trainers/supervised.rs:987:51
+    |
+977 |         let val_loader = self.val_loader.as_mut().unwrap();
+    |                          --------------- mutable borrow occurs here
+978 |         
+979 |         while let Some(batch) = val_loader.next_batch().await? {
+    |                                 ---------- mutable borrow later used here
+...
+987 |             let (_, loss_metrics, task_metrics) = self.supervised_step_eval(tokenized_batch)?;
+    |                                                   ^^^^ immutable borrow occurs here
+
+warning: unused variable: `metadata`
+   --> src/training/checkpoints/manager.rs:337:13
+    |
+337 |         let metadata = self.create_safetensors_metadata(checkpoint)?;
+    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_metadata`
+
+warning: unused variable: `config`
+   --> src/training/checkpoints/recovery.rs:411:42
+    |
+411 |     async fn attempt_recovery(&mut self, config: &TrainingConfig) -> Result<PathBuf> {
+    |                                          ^^^^^^ help: if this is intentional, prefix it with an underscore: `_config`
+
+warning: variable does not need to be mutable
+   --> src/training/metrics/tracker.rs:209:17
+    |
+209 |             let mut interval = tokio::time::interval(self.config.collection_interval);
+    |                 ----^^^^^^^^
+    |                 |
+    |                 help: remove this `mut`
+
+error[E0499]: cannot borrow `*self` as mutable more than once at a time
+   --> src/training/metrics/tracker.rs:438:25
+    |
+432 |         if let Some(interval) = &mut self.collection_timer {
+    |                                 -------------------------- first mutable borrow occurs here
+433 |             loop {
+434 |                 interval.tick().await;
+    |                 -------- first borrow later used here
+...
+438 |                 let _ = self.collect_metrics(current.step, current.epoch).await;
+    |                         ^^^^ second mutable borrow occurs here
+
+warning: use of deprecated method `rand::Rng::gen`: Renamed to `random` to avoid conflict with the new `gen` keyword in Rust 2024.
+   --> src/hypernetwork/models.rs:177:20
+    |
+177 |             if rng.gen::<f32>() > self.dropout_prob {
+    |                    ^^^
+
+warning: use of deprecated method `rand::Rng::gen_range`: Renamed to `random_range`
+  --> src/lora/parameters.rs:70:27
+   |
+70 |             *weight = rng.gen_range(-xavier_bound..xavier_bound);
+   |                           ^^^^^^^^^
+
+warning: use of deprecated method `rand::Rng::gen_range`: Renamed to `random_range`
+   --> src/lora/generation.rs:359:34
+    |
+359 |             let noise: f32 = rng.gen_range(-1.0..1.0) * self.config.noise_level;
+    |                                  ^^^^^^^^^
+
+error[E0308]: mismatched types
+   --> src/training/trainer.rs:519:13
+    |
+504 |     fn supervised_step(&mut self, batch: SupervisedBatch) -> Result<Tensor> {
+    |                                                              -------------- expected `std::result::Result<candle_core::Tensor, anyhow::Error>` because of return type
+...
+519 |             Tensor::new(&[1.0f32], &self.device)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `anyhow::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `anyhow::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `anyhow::Error` is defined in crate `anyhow`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.98/src/lib.rs:393:1
+    |
+393 | pub struct Error {
+    | ^^^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+519 |             Ok(Tensor::new(&[1.0f32], &self.device)?)
+    |             +++                                    ++
+
+error[E0308]: `?` operator has incompatible types
+   --> src/training/trainers/supervised.rs:925:63
+    |
+925 |                     *existing_a = Tensor::cat(&[&existing_a, &a_tensor.unsqueeze(0)?], 0)?;
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^ expected `&mut Tensor`, found `Tensor`
+    |
+    = note: `?` operator cannot convert from `candle_core::Tensor` to `&mut candle_core::Tensor`
+help: consider mutably borrowing here
+    |
+925 |                     *existing_a = Tensor::cat(&[&existing_a, &&mut a_tensor.unsqueeze(0)?], 0)?;
+    |                                                               ++++
+
+error[E0308]: `?` operator has incompatible types
+   --> src/training/trainers/supervised.rs:926:63
+    |
+926 |                     *existing_b = Tensor::cat(&[&existing_b, &b_tensor.unsqueeze(0)?], 0)?;
+    |                                                               ^^^^^^^^^^^^^^^^^^^^^^ expected `&mut Tensor`, found `Tensor`
+    |
+    = note: `?` operator cannot convert from `candle_core::Tensor` to `&mut candle_core::Tensor`
+help: consider mutably borrowing here
+    |
+926 |                     *existing_b = Tensor::cat(&[&existing_b, &&mut b_tensor.unsqueeze(0)?], 0)?;
+    |                                                               ++++
+
+error[E0369]: cannot multiply `&mut candle_core::Tensor` by `f64`
+  --> src/training/optimizers/adamw.rs:96:38
+   |
+96 |         let new_momentum = (momentum * self.beta1)? + (grad * (1.0 - self.beta1))?;
+   |                             -------- ^ ---------- f64
+   |                             |
+   |                             &mut candle_core::Tensor
+   |
+   = note: an implementation for `&candle_core::Tensor * f64` exists
+help: consider reborrowing this side
+   |
+96 |         let new_momentum = (&*momentum * self.beta1)? + (grad * (1.0 - self.beta1))?;
+   |                             ++
+
+error[E0369]: cannot multiply `&mut candle_core::Tensor` by `f64`
+   --> src/training/optimizers/adamw.rs:101:38
+    |
+101 |         let new_variance = (variance * self.beta2)? + (&grad_squared * (1.0 - self.beta2))?;
+    |                             -------- ^ ---------- f64
+    |                             |
+    |                             &mut candle_core::Tensor
+    |
+    = note: an implementation for `&candle_core::Tensor * f64` exists
+help: consider reborrowing this side
+    |
+101 |         let new_variance = (&*variance * self.beta2)? + (&grad_squared * (1.0 - self.beta2))?;
+    |                             ++
+
+error[E0599]: no method named `as_slice` found for reference `&candle_core::Shape` in the current scope
+   --> src/training/optimizers/adamw.rs:174:39
+    |
+174 |                 shape: tensor.shape().as_slice().to_vec(),
+    |                                       ^^^^^^^^ method not found in `&Shape`
+
+error[E0599]: no method named `as_slice` found for reference `&candle_core::Shape` in the current scope
+   --> src/training/optimizers/adamw.rs:184:39
+    |
+184 |                 shape: tensor.shape().as_slice().to_vec(),
+    |                                       ^^^^^^^^ method not found in `&Shape`
+
+error[E0369]: cannot multiply `&mut candle_core::Tensor` by `f64`
+  --> src/training/optimizers/sgd.rs:89:49
+   |
+89 |             let new_momentum = (momentum_buffer * self.momentum)? + &effective_grad;
+   |                                 --------------- ^ ------------- f64
+   |                                 |
+   |                                 &mut candle_core::Tensor
+   |
+   = note: an implementation for `&candle_core::Tensor * f64` exists
+help: consider reborrowing this side
+   |
+89 |             let new_momentum = (&*momentum_buffer * self.momentum)? + &effective_grad;
+   |                                 ++
+
+error[E0599]: no method named `as_slice` found for reference `&candle_core::Shape` in the current scope
+   --> src/training/optimizers/sgd.rs:151:39
+    |
+151 |                 shape: tensor.shape().as_slice().to_vec(),
+    |                                       ^^^^^^^^ method not found in `&Shape`
+
+error[E0308]: mismatched types
+   --> src/training/optimizers/mod.rs:381:20
+    |
+381 |             if let Ok(grad) = gradients.get(&var) {
+    |                    ^^^^^^^^   ------------------- this expression has type `std::option::Option<&candle_core::Tensor>`
+    |                    |
+    |                    expected `Option<&Tensor>`, found `Result<_, _>`
+    |
+    = note: expected enum `std::option::Option<&candle_core::Tensor>`
+               found enum `std::result::Result<_, _>`
+
+error[E0308]: mismatched types
+   --> src/training/optimizers/mod.rs:407:20
+    |
+407 |             if let Ok(grad) = gradients.get(&var) {
+    |                    ^^^^^^^^   ------------------- this expression has type `std::option::Option<&candle_core::Tensor>`
+    |                    |
+    |                    expected `Option<&Tensor>`, found `Result<_, _>`
+    |
+    = note: expected enum `std::option::Option<&candle_core::Tensor>`
+               found enum `std::result::Result<_, _>`
+
+error[E0308]: mismatched types
+   --> src/training/optimizers/mod.rs:426:20
+    |
+426 |             if let Ok(grad) = gradients.get(&var) {
+    |                    ^^^^^^^^   ------------------- this expression has type `std::option::Option<&candle_core::Tensor>`
+    |                    |
+    |                    expected `Option<&Tensor>`, found `Result<_, _>`
+    |
+    = note: expected enum `std::option::Option<&candle_core::Tensor>`
+               found enum `std::result::Result<_, _>`
+
+error[E0599]: no method named `as_slice` found for reference `&candle_core::Shape` in the current scope
+   --> src/training/loss/utils.rs:292:35
+    |
+292 |             shape: tensor.shape().as_slice().to_vec(),
+    |                                   ^^^^^^^^ method not found in `&Shape`
+
+warning: use of deprecated method `rand::Rng::gen_range`: Renamed to `random_range`
+   --> src/utils.rs:369:26
+    |
+369 |             .map(|_| rng.gen_range(-bound..bound))
+    |                          ^^^^^^^^^
+
+warning: unused import: `Module`
+  --> src/training/trainers/supervised.rs:14:37
+   |
+14 | use candle_nn::{VarBuilder, VarMap, Module};
+   |                                     ^^^^^^
+
+warning: unused variable: `model_path`
+   --> src/models/mod.rs:130:5
+    |
+130 |     model_path: &str,
+    |     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_model_path`
+
+warning: unused variable: `config_overrides`
+   --> src/models/mod.rs:132:5
+    |
+132 |     config_overrides: Option<HashMap<String, serde_json::Value>>,
+    |     ^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_config_overrides`
+
+warning: unused variable: `attention_mask`
+   --> src/models/mod.rs:172:43
+    |
+172 |     fn forward(&self, input_ids: &Tensor, attention_mask: Option<&Tensor>) -> Result<ModelOutput> {
+    |                                           ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_attention_mask`
+
+warning: unused variable: `var_builder`
+   --> src/training/trainer.rs:194:13
+    |
+194 |         let var_builder = VarBuilder::from_varmap(&var_map, candle_core::DType::F32, &device);
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_var_builder`
+
+warning: unused variable: `batch`
+   --> src/training/trainer.rs:526:9
+    |
+526 |         batch: Box<dyn std::any::Any>, 
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_batch`
+
+warning: unused variable: `tasks`
+   --> src/training/trainer.rs:527:9
+    |
+527 |         tasks: &[String], 
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_tasks`
+
+warning: unused variable: `task_weights`
+   --> src/training/trainer.rs:528:9
+    |
+528 |         task_weights: &[f64]
+    |         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_weights`
+
+warning: unused variable: `threshold`
+   --> src/training/trainer.rs:662:21
+    |
+662 |                 let threshold = self.config.optimizer.gradient_clipping.threshold;
+    |                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_threshold`
+
+warning: unused variable: `threshold`
+   --> src/training/trainer.rs:667:21
+    |
+667 |                 let threshold = self.config.optimizer.gradient_clipping.threshold;
+    |                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_threshold`
+
+warning: unused variable: `percentile`
+   --> src/training/trainer.rs:670:65
+    |
+670 |             crate::training::config::ClippingMethod::Adaptive { percentile } => {
+    |                                                                 ^^^^^^^^^^ help: try ignoring the field: `percentile: _`
+
+warning: unused variable: `gradients`
+   --> src/training/trainer.rs:658:39
+    |
+658 |     fn apply_gradient_clipping(&self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    |                                       ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `state`
+   --> src/training/trainer.rs:771:43
+    |
+771 |     fn deserialize_model_state(&mut self, state: &[u8]) -> Result<()> {
+    |                                           ^^^^^ help: if this is intentional, prefix it with an underscore: `_state`
+
+warning: unused variable: `gradients`
+   --> src/training/trainers/reconstruction.rs:239:37
+    |
+239 |     fn unscale_gradients(&mut self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
+    |                                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `var_builder`
+   --> src/training/trainers/reconstruction.rs:419:13
+    |
+419 |         let var_builder = VarBuilder::from_varmap(&var_map, DType::F32, &device);
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_var_builder`
+
+warning: unused variable: `layer_name`
+   --> src/training/trainers/reconstruction.rs:908:36
+    |
+908 |     fn get_layer_dimensions(&self, layer_name: &str) -> Result<(usize, usize, usize)> {
+    |                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_layer_name`
+
+warning: unused variable: `active_layers`
+   --> src/training/trainers/reconstruction.rs:935:33
+    |
+935 |             if let Some(ref mut active_layers) = self.active_layers {
+    |                                 ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_active_layers`
+
+warning: unused variable: `target_memory_mb`
+    --> src/training/trainers/reconstruction.rs:1028:49
+     |
+1028 |             GradientAccumulationMode::Dynamic { target_memory_mb } => {
+     |                                                 ^^^^^^^^^^^^^^^^ help: try ignoring the field: `target_memory_mb: _`
+
+warning: unused variable: `max_steps`
+    --> src/training/trainers/reconstruction.rs:1032:61
+     |
+1032 |             GradientAccumulationMode::Adaptive { min_steps, max_steps } => {
+     |                                                             ^^^^^^^^^ help: try ignoring the field: `max_steps: _`
+
+warning: unused variable: `gradients`
+    --> src/training/trainers/reconstruction.rs:1040:39
+     |
+1040 |     fn apply_gradient_clipping(&self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+     |                                       ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `gradients`
+    --> src/training/trainers/reconstruction.rs:1074:47
+     |
+1074 |     fn update_parameter_statistics(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+     |                                               ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `decay_factor`
+    --> src/training/trainers/reconstruction.rs:1148:47
+     |
+1148 |             LayerWeightingStrategy::ByDepth { decay_factor } => {
+     |                                               ^^^^^^^^^^^^ help: try ignoring the field: `decay_factor: _`
+
+warning: unused variable: `state`
+    --> src/training/trainers/reconstruction.rs:1249:43
+     |
+1249 |     fn deserialize_model_state(&mut self, state: &[u8]) -> Result<()> {
+     |                                           ^^^^^ help: if this is intentional, prefix it with an underscore: `_state`
+
+warning: unused variable: `base_model`
+   --> src/training/trainers/supervised.rs:317:13
+    |
+317 |         let base_model = self.base_model.read();
+    |             ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_base_model`
+
+warning: unused variable: `input_ids`
+   --> src/training/trainers/supervised.rs:320:13
+    |
+320 |         let input_ids = batch.input_ids.as_ref()
+    |             ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_input_ids`
+
+warning: unused variable: `attention_mask`
+   --> src/training/trainers/supervised.rs:322:13
+    |
+322 |         let attention_mask = batch.attention_mask.as_ref();
+    |             ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_attention_mask`
+
+warning: unused variable: `num_labels`
+   --> src/training/trainers/supervised.rs:429:52
+    |
+429 |             SupervisedTaskType::SequenceLabeling { num_labels } => {
+    |                                                    ^^^^^^^^^^ help: try ignoring the field: `num_labels: _`
+
+warning: unused variable: `predictions`
+   --> src/training/trainers/supervised.rs:452:33
+    |
+452 |     fn compute_f1_scores(&self, predictions: &Tensor, labels: &Tensor, num_classes: usize) -> Result<Vec<f64>> {
+    |                                 ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_predictions`
+
+warning: unused variable: `labels`
+   --> src/training/trainers/supervised.rs:452:55
+    |
+452 |     fn compute_f1_scores(&self, predictions: &Tensor, labels: &Tensor, num_classes: usize) -> Result<Vec<f64>> {
+    |                                                       ^^^^^^ help: if this is intentional, prefix it with an underscore: `_labels`
+
+warning: unused variable: `predictions`
+   --> src/training/trainers/supervised.rs:457:34
+    |
+457 |     fn compute_perplexity(&self, predictions: &Tensor, labels: &Tensor) -> Result<f64> {
+    |                                  ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_predictions`
+
+warning: unused variable: `labels`
+   --> src/training/trainers/supervised.rs:457:56
+    |
+457 |     fn compute_perplexity(&self, predictions: &Tensor, labels: &Tensor) -> Result<f64> {
+    |                                                        ^^^^^^ help: if this is intentional, prefix it with an underscore: `_labels`
+
+warning: unused variable: `var_builder`
+   --> src/training/trainers/supervised.rs:488:13
+    |
+488 |         let var_builder = VarBuilder::from_varmap(&var_map, DType::F32, &device);
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_var_builder`
+
+warning: unused variable: `vocab_size`
+   --> src/training/trainers/supervised.rs:944:21
+    |
+944 |                 let vocab_size = 50000;
+    |                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_vocab_size`
+
+warning: unused variable: `task_description`
+    --> src/training/trainers/supervised.rs:1032:39
+     |
+1032 |     fn generate_task_embedding(&self, task_description: &str) -> Result<Tensor> {
+     |                                       ^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_description`
+
+warning: unused variable: `state`
+    --> src/training/trainers/supervised.rs:1199:43
+     |
+1199 |     fn deserialize_model_state(&mut self, state: &[u8]) -> Result<()> {
+     |                                           ^^^^^ help: if this is intentional, prefix it with an underscore: `_state`
+
+warning: unused variable: `device`
+   --> src/training/checkpoints/manager.rs:424:61
+    |
+424 |     fn map_to_device(&self, checkpoint: TrainingCheckpoint, device: &str) -> Result<TrainingCheckpoint> {
+    |                                                             ^^^^^^ help: if this is intentional, prefix it with an underscore: `_device`
+
+warning: unused variable: `logging_config`
+   --> src/training/metrics/tracker.rs:545:28
+    |
+545 |     fn from_logging_config(logging_config: LoggingConfig) -> Self {
+    |                            ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_logging_config`
+
+warning: unused variable: `gradients`
+   --> src/training/optimizers/adamw.rs:140:24
+    |
+140 |     fn step(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    |                        ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `gradients`
+   --> src/training/optimizers/sgd.rs:117:24
+    |
+117 |     fn step(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    |                        ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `alpha`
+   --> src/training/optimizers/mod.rs:263:34
+    |
+263 |         OptimizerType::RMSprop { alpha } => {
+    |                                  ^^^^^ help: try ignoring the field: `alpha: _`
+
+warning: unused variable: `patience`
+   --> src/training/optimizers/mod.rs:322:42
+    |
+322 |         SchedulerType::ReduceOnPlateau { patience, factor } => {
+    |                                          ^^^^^^^^ help: try ignoring the field: `patience: _`
+
+warning: unused variable: `factor`
+   --> src/training/optimizers/mod.rs:322:52
+    |
+322 |         SchedulerType::ReduceOnPlateau { patience, factor } => {
+    |                                                    ^^^^^^ help: try ignoring the field: `factor: _`
+
+warning: unused variable: `config`
+   --> src/training/loss/supervised.rs:328:9
+    |
+328 |         config: &SupervisedLossConfig,
+    |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_config`
+
+warning: unused variable: `predictions`
+   --> src/training/loss/supervised.rs:374:13
+    |
+374 |         let predictions = logits.argmax_keepdim(D::Minus1)?.squeeze(D::Minus1)?;
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_predictions`
+
+warning: value assigned to `a_single` is never read
+   --> src/training/loss/regularization.rs:463:21
+    |
+463 |                     a_single = (a_single * scale)?;
+    |                     ^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` on by default
+
+warning: variable does not need to be mutable
+   --> src/training/loss/regularization.rs:454:17
+    |
+454 |             let mut b_single = b_matrix.get(batch_idx)?;
+    |                 ----^^^^^^^^
+    |                 |
+    |                 help: remove this `mut`
+
+warning: unused variable: `param`
+   --> src/training/loss/utils.rs:143:20
+    |
+143 |         for (name, param) in parameters {
+    |                    ^^^^^ help: if this is intentional, prefix it with an underscore: `_param`
+
+warning: unused variable: `grad`
+   --> src/training/loss/utils.rs:144:23
+    |
+144 |             if let Ok(grad) = loss.backward() {
+    |                       ^^^^ help: if this is intentional, prefix it with an underscore: `_grad`
+
+warning: unused variable: `task_name`
+   --> src/training/loss/composition.rs:306:14
+    |
+306 |         for (task_name, task) in &self.tasks {
+    |              ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_name`
+
+warning: unused variable: `config`
+   --> src/training/loss/composition.rs:354:49
+    |
+354 |     pub fn new(strategy: TaskBalancingStrategy, config: TaskBalancingConfig) -> Self {
+    |                                                 ^^^^^^ help: if this is intentional, prefix it with an underscore: `_config`
+
+warning: unused variable: `current_loss`
+   --> src/training/loss/composition.rs:454:26
+    |
+454 |         for (task_name, &current_loss) in task_losses {
+    |                          ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_current_loss`
+
+warning: unused variable: `task_losses`
+   --> src/training/loss/composition.rs:485:9
+    |
+485 |         task_losses: &HashMap<String, f64>,
+    |         ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_losses`
+
+Some errors have detailed explanations: E0308, E0369, E0382, E0499, E0502, E0599.
+For more information about an error, try `rustc --explain E0308`.
+warning: `lorax` (lib) generated 104 warnings
+error: could not compile `lorax` (lib) due to 21 previous errors; 104 warnings emitted

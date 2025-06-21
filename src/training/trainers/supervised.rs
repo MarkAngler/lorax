@@ -10,7 +10,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use anyhow::{Result, Context};
-use candle_core::{Device, Tensor, DType};
+use candle_core::{Device, Tensor, DType, IndexOp};
 use candle_nn::{VarBuilder, VarMap, Module};
 use chrono::{DateTime, Utc};
 use parking_lot::RwLock;
@@ -29,6 +29,7 @@ use crate::training::{
     SupervisedLoss, SupervisedLossConfig, SupervisedPredictions, LossFunctionMetrics,
     SupervisedTaskType,
 };
+use crate::training::loss::LossFunction;
 use crate::training::data::{Dataset, DataLoader};
 
 /// Configuration for supervised T2L training
@@ -623,7 +624,8 @@ impl SupervisedTrainer {
         // Resume from checkpoint if specified
         if let Some(checkpoint_path) = &self.config.base_config.training.resume_from_checkpoint {
             info!("Resuming from checkpoint: {:?}", checkpoint_path);
-            self.load_checkpoint(checkpoint_path)?;
+            let path = checkpoint_path.clone();
+            self.load_checkpoint(&path)?;
         }
         
         // Log initial state
@@ -735,7 +737,7 @@ impl SupervisedTrainer {
             self.optimizer.step(&gradients)?;
             
             // Clear gradients
-            self.var_map.all_vars().iter().for_each(|(_, var)| {
+            self.var_map.all_vars().iter().for_each(|var| {
                 // Clear gradients - implementation needed
             });
             
@@ -846,6 +848,43 @@ impl SupervisedTrainer {
         Ok((loss, loss_metrics, task_metrics))
     }
     
+    /// Perform a supervised step for evaluation (non-mutating)
+    fn supervised_step_eval(&self, batch: SupervisedBatch) -> Result<(Tensor, LossFunctionMetrics, HashMap<String, f64>)> {
+        let hypernetwork = self.hypernetwork.read();
+        
+        // Generate LoRA parameters from task description
+        let lora_params = self.generate_lora_params(&hypernetwork, &batch)?;
+        
+        // Create adapted model with LoRA parameters
+        let adapted_model = AdaptedModel::new(
+            self.base_model.clone(),
+            lora_params,
+            &self.config.lora_adaptation,
+            self.device.clone(),
+        )?;
+        
+        // Forward pass through adapted model
+        let predictions = adapted_model.forward(&batch)?;
+        
+        // Compute loss
+        let loss_metrics = self.loss_fn.compute_metrics(
+            &batch as &dyn std::any::Any,
+            &predictions as &dyn std::any::Any
+        )?;
+        
+        // Create loss tensor
+        let loss = Tensor::full(loss_metrics.total_loss, (), &self.device)?;
+        
+        // Compute task-specific metrics
+        let task_metrics = if let (Some(labels), logits) = (&batch.labels, &predictions.logits) {
+            self.task_metrics.compute_metrics(logits, labels)
+        } else {
+            HashMap::new()
+        };
+        
+        Ok((loss, loss_metrics, task_metrics))
+    }
+    
     /// Generate LoRA parameters using hypernetwork
     fn generate_lora_params(
         &self,
@@ -883,8 +922,12 @@ impl SupervisedTrainer {
                 } else {
                     // Stack with existing params
                     let (existing_a, existing_b) = all_lora_params.get_mut(&layer_name).unwrap();
-                    *existing_a = Tensor::cat(&[existing_a, &a_tensor.unsqueeze(0)?], 0)?;
-                    *existing_b = Tensor::cat(&[existing_b, &b_tensor.unsqueeze(0)?], 0)?;
+                    let unsqueezed_a = a_tensor.unsqueeze(0)?;
+                    let unsqueezed_b = b_tensor.unsqueeze(0)?;
+                    let new_a = Tensor::cat(&[existing_a.as_ref(), &unsqueezed_a], 0)?;
+                    let new_b = Tensor::cat(&[existing_b.as_ref(), &unsqueezed_b], 0)?;
+                    *existing_a = new_a;
+                    *existing_b = new_b;
                 }
             }
         }
@@ -935,17 +978,23 @@ impl SupervisedTrainer {
         let mut task_metrics_accum: HashMap<String, f64> = HashMap::new();
         let mut sample_predictions = Vec::new();
         
-        let val_loader = self.val_loader.as_mut().unwrap();
+        // Collect all batches first to avoid borrow checker issues
+        let mut batches = Vec::new();
+        if let Some(val_loader) = self.val_loader.as_mut() {
+            while let Some(batch) = val_loader.next_batch().await? {
+                let batch = batch.downcast::<SupervisedBatch>()
+                    .map_err(|_| anyhow::anyhow!("Invalid batch type for supervised evaluation"))?;
+                batches.push(*batch);
+            }
+        }
         
-        while let Some(batch) = val_loader.next_batch().await? {
-            let batch = batch.downcast::<SupervisedBatch>()
-                .map_err(|_| anyhow::anyhow!("Invalid batch type for supervised evaluation"))?;
-            
+        // Process the collected batches
+        for batch in batches {
             // Tokenize batch if needed
             let tokenized_batch = self.tokenize_batch(&batch)?;
             
             // Forward pass without gradient computation
-            let (_, loss_metrics, task_metrics) = self.supervised_step(tokenized_batch)?;
+            let (_, loss_metrics, task_metrics) = self.supervised_step_eval(tokenized_batch)?;
             
             // Accumulate metrics
             total_loss += loss_metrics.total_loss;
@@ -1005,7 +1054,7 @@ impl SupervisedTrainer {
                 num_layers: 12,
                 num_heads: 12,
             }),
-            ModelType::LLaMA => Ok(TargetArchitecture::LLAMA {
+            ModelType::LLaMA => Ok(TargetArchitecture::LLaMA {
                 hidden_size: 4096,
                 num_layers: 32,
                 num_heads: 32,
@@ -1108,11 +1157,12 @@ impl SupervisedTrainer {
             epoch,
             global_step: self.state.global_step,
             model_state: self.serialize_model_state()?,
-            optimizer_state: self.optimizer.state_dict()?,
-            scheduler_state: self.scheduler.state_dict()?,
+            optimizer_state: Some(self.optimizer.state_dict()?),
+            scheduler_state: Some(self.scheduler.state_dict()?),
             metrics: metrics.clone(),
             config: self.config.base_config.clone(),
             timestamp: Utc::now(),
+            metadata: crate::training::checkpoints::CheckpointMetadata::new(),
         };
         
         let path = self.checkpoint_manager.save_checkpoint(checkpoint).await?;

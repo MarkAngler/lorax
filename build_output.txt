@@ -1,0 +1,1777 @@
+   Compiling lorax v0.1.0 (/workspaces/lorax)
+warning: unused import: `ParameterMetadata`
+ --> src/lora/generation.rs:4:46
+  |
+4 | use super::parameters::{LoraParameterConfig, ParameterMetadata};
+  |                                              ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `std::collections::HashMap`
+ --> src/lora/config.rs:4:5
+  |
+4 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `candle_nn::Module`
+ --> src/models/mod.rs:8:5
+  |
+8 | use candle_nn::Module;
+  |     ^^^^^^^^^^^^^^^^^
+
+warning: unused import: `VarBuilder`
+ --> src/projection.rs:5:25
+  |
+5 | use candle_nn::{Linear, VarBuilder};
+  |                         ^^^^^^^^^^
+
+warning: unused imports: `DateTime` and `Utc`
+ --> src/training/config.rs:8:14
+  |
+8 | use chrono::{DateTime, Utc};
+  |              ^^^^^^^^  ^^^
+
+warning: unused import: `Rng`
+  --> src/training/trainer.rs:16:12
+   |
+16 | use rand::{Rng, SeedableRng};
+   |            ^^^
+
+warning: unused import: `warn`
+  --> src/training/trainer.rs:20:35
+   |
+20 | use tracing::{debug, error, info, warn};
+   |                                   ^^^^
+
+warning: unused import: `PathBuf`
+ --> src/training/trainers/reconstruction.rs:8:23
+  |
+8 | use std::path::{Path, PathBuf};
+  |                       ^^^^^^^
+
+warning: unused import: `DateTime`
+  --> src/training/trainers/reconstruction.rs:15:14
+   |
+15 | use chrono::{DateTime, Utc};
+   |              ^^^^^^^^
+
+warning: unused import: `warn`
+  --> src/training/trainers/reconstruction.rs:19:35
+   |
+19 | use tracing::{debug, error, info, warn, instrument};
+   |                                   ^^^^
+
+warning: unused import: `HypernetworkConfig`
+  --> src/training/trainers/reconstruction.rs:21:41
+   |
+21 | use crate::hypernetwork::{HyperNetwork, HypernetworkConfig, TargetArchitecture};
+   |                                         ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `crate::lora::parameters::LoraParameters`
+  --> src/training/trainers/reconstruction.rs:22:5
+   |
+22 | use crate::lora::parameters::LoraParameters;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `MemoryUsage` and `T2LTrainer`
+  --> src/training/trainers/reconstruction.rs:25:5
+   |
+25 |     T2LTrainer, MemoryUsage, ReconstructionBatch,
+   |     ^^^^^^^^^^  ^^^^^^^^^^^
+
+warning: unused import: `DateTime`
+  --> src/training/trainers/supervised.rs:15:14
+   |
+15 | use chrono::{DateTime, Utc};
+   |              ^^^^^^^^
+
+warning: unused import: `warn`
+  --> src/training/trainers/supervised.rs:19:35
+   |
+19 | use tracing::{debug, error, info, warn, instrument};
+   |                                   ^^^^
+
+warning: unused import: `HypernetworkConfig`
+  --> src/training/trainers/supervised.rs:21:41
+   |
+21 | use crate::hypernetwork::{HyperNetwork, HypernetworkConfig, TargetArchitecture};
+   |                                         ^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `LoraConfig` and `LoraLayer`
+  --> src/training/trainers/supervised.rs:22:19
+   |
+22 | use crate::lora::{LoraLayer, LoraConfig, LoraAdapter};
+   |                   ^^^^^^^^^  ^^^^^^^^^^
+
+warning: unused imports: `ModelOutput` and `create_base_model`
+  --> src/training/trainers/supervised.rs:23:56
+   |
+23 | use crate::models::{BaseModel, ModelConfig, ModelType, ModelOutput, create_base_model};
+   |                                                        ^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `MemoryUsage` and `T2LTrainer`
+  --> src/training/trainers/supervised.rs:26:5
+   |
+26 |     T2LTrainer, MemoryUsage, SupervisedBatch,
+   |     ^^^^^^^^^^  ^^^^^^^^^^^
+
+warning: unused import: `std::sync::Arc`
+  --> src/training/checkpoints/manager.rs:10:5
+   |
+10 | use std::sync::Arc;
+   |     ^^^^^^^^^^^^^^
+
+warning: unused import: `error`
+  --> src/training/checkpoints/manager.rs:17:34
+   |
+17 | use tracing::{debug, info, warn, error};
+   |                                  ^^^^^
+
+warning: unused import: `CheckpointMetadata`
+  --> src/training/checkpoints/manager.rs:20:56
+   |
+20 | use super::{TrainingCheckpoint, CheckpointLoadOptions, CheckpointMetadata};
+   |                                                        ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `CheckpointMetadata`
+  --> src/training/checkpoints/recovery.rs:18:33
+   |
+18 | use super::{TrainingCheckpoint, CheckpointMetadata};
+   |                                 ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `super::metadata::ValidationStatus`
+  --> src/training/checkpoints/recovery.rs:19:5
+   |
+19 | use super::metadata::ValidationStatus;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `std::path::PathBuf`
+  --> src/training/checkpoints/mod.rs:16:5
+   |
+16 | use std::path::PathBuf;
+   |     ^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `error`
+  --> src/training/metrics/tracker.rs:13:34
+   |
+13 | use tracing::{debug, info, warn, error};
+   |                                  ^^^^^
+
+warning: unused imports: `PerformanceMetrics` and `SystemMetrics`
+  --> src/training/metrics/collectors.rs:11:43
+   |
+11 | use super::{TrainingMetrics, LossMetrics, PerformanceMetrics, ModelMetrics, SystemMetrics};
+   |                                           ^^^^^^^^^^^^^^^^^^                ^^^^^^^^^^^^^
+
+warning: unused import: `std::collections::VecDeque`
+ --> src/training/metrics/exporters.rs:7:5
+  |
+7 | use std::collections::VecDeque;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `Instant`
+  --> src/training/metrics/mod.rs:24:27
+   |
+24 | use std::time::{Duration, Instant};
+   |                           ^^^^^^^
+
+warning: unused import: `Tensor`
+  --> src/training/optimizers/mod.rs:22:19
+   |
+22 | use candle_core::{Tensor, Device};
+   |                   ^^^^^^
+
+warning: unused import: `VarBuilder`
+  --> src/training/optimizers/mod.rs:23:25
+   |
+23 | use candle_nn::{VarMap, VarBuilder};
+   |                         ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+ --> src/hypernetwork/models.rs:7:11
+  |
+7 | use rand::thread_rng;
+  |           ^^^^^^^^^^
+  |
+  = note: `#[warn(deprecated)]` on by default
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+  --> src/hypernetwork/models.rs:48:23
+   |
+48 |         let mut rng = thread_rng();
+   |                       ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/hypernetwork/models.rs:173:23
+    |
+173 |         let mut rng = thread_rng();
+    |                       ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+  --> src/lora/parameters.rs:62:29
+   |
+62 |         let mut rng = rand::thread_rng();
+   |                             ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/lora/generation.rs:356:29
+    |
+356 |         let mut rng = rand::thread_rng();
+    |                             ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/utils.rs:366:29
+    |
+366 |         let mut rng = rand::thread_rng();
+    |                             ^^^^^^^^^^
+
+warning: use of deprecated function `rand::thread_rng`: Renamed to `rng`
+   --> src/utils.rs:376:29
+    |
+376 |         let mut rng = rand::thread_rng();
+    |                             ^^^^^^^^^^
+
+warning: unused variable: `lora_params_raw`
+   --> src/lib.rs:107:13
+    |
+107 |         let lora_params_raw = self.hypernetwork.generate_lora_params(&projected_array, target_arch)?;
+    |             ^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_lora_params_raw`
+    |
+    = note: `#[warn(unused_variables)]` on by default
+
+warning: unused variable: `eval_metrics`
+   --> src/training/trainer.rs:447:25
+    |
+447 |                     let eval_metrics = self.evaluate().await?;
+    |                         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_eval_metrics`
+
+error[E0502]: cannot borrow `*self` as mutable because it is also borrowed as immutable
+   --> src/training/trainer.rs:414:21
+    |
+402 |             let loss = match &self.config.model.training_type {
+    |                              -------------------------------- immutable borrow occurs here
+...
+414 |                     self.multi_task_step(batch, tasks, task_weights)?
+    |                     ^^^^^---------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                     |    |
+    |                     |    immutable borrow later used by call
+    |                     mutable borrow occurs here
+
+error[E0382]: borrow of moved value: `loss`
+   --> src/training/trainer.rs:433:24
+    |
+402 |             let loss = match &self.config.model.training_type {
+    |                 ---- move occurs because `loss` has type `candle_core::Tensor`, which does not implement the `Copy` trait
+...
+422 |             self.backward_step(loss)?;
+    |                                ---- value moved here
+...
+433 |                        loss.to_scalar::<f64>()?, 
+    |                        ^^^^ value borrowed here after move
+    |
+note: consider changing this parameter type in method `backward_step` to borrow instead if owning the value isn't necessary
+   --> src/training/trainer.rs:531:39
+    |
+531 |     fn backward_step(&mut self, loss: Tensor) -> Result<()> {
+    |        ------------- in this method   ^^^^^^ this parameter takes ownership of the value
+help: consider cloning the value if the performance cost is acceptable
+    |
+422 |             self.backward_step(loss.clone())?;
+    |                                    ++++++++
+
+warning: variable does not need to be mutable
+   --> src/training/trainer.rs:581:13
+    |
+581 |         let mut val_loader = self.val_loader.take().unwrap();
+    |             ----^^^^^^^^^^
+    |             |
+    |             help: remove this `mut`
+    |
+    = note: `#[warn(unused_mut)]` on by default
+
+error[E0502]: cannot borrow `*self` as mutable because it is also borrowed as immutable
+   --> src/training/trainer.rs:596:21
+    |
+584 |             let loss = match &self.config.model.training_type {
+    |                              -------------------------------- immutable borrow occurs here
+...
+596 |                     self.multi_task_step(batch, tasks, task_weights)?
+    |                     ^^^^^---------------^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |                     |    |
+    |                     |    immutable borrow later used by call
+    |                     mutable borrow occurs here
+
+error[E0308]: mismatched types
+   --> src/training/trainers/reconstruction.rs:697:47
+    |
+697 |                     !scaler.unscale_gradients(&gradients)?
+    |                             ----------------- ^^^^^^^^^^ types differ in mutability
+    |                             |
+    |                             arguments to this method are incorrect
+    |
+    = note: expected mutable reference `&mut GradStore`
+                       found reference `&GradStore`
+note: method defined here
+   --> src/training/trainers/reconstruction.rs:239:8
+    |
+239 |     fn unscale_gradients(&self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
+    |        ^^^^^^^^^^^^^^^^^        ------------------------------------------------
+
+error[E0308]: mismatched types
+   --> src/training/trainers/reconstruction.rs:714:58
+    |
+714 |                 self.var_map.all_vars().iter().for_each(|(_, var)| {
+    |                                                          ^^^^^^^^
+    |                                                          |
+    |                                                          expected `Var`, found `(_, _)`
+    |                                                          expected due to this
+    |
+    = note: expected struct `Var`
+                found tuple `(_, _)`
+
+error[E0499]: cannot borrow `*self` as mutable more than once at a time
+   --> src/training/trainers/reconstruction.rs:944:41
+    |
+937 |         let val_loader = self.val_loader.as_mut().unwrap();
+    |                          --------------- first mutable borrow occurs here
+938 |         
+939 |         while let Some(batch) = val_loader.next_batch().await? {
+    |                                 ---------- first borrow later used here
+...
+944 |             let (_loss, loss_metrics) = self.reconstruction_step(*batch)?;
+    |                                         ^^^^ second mutable borrow occurs here
+
+error[E0308]: `?` operator has incompatible types
+    --> src/training/trainers/reconstruction.rs:1172:30
+     |
+1172 |             optimizer_state: self.optimizer.state_dict()?,
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Option<Vec<u8>>`, found `Vec<u8>`
+     |
+     = note: `?` operator cannot convert from `Vec<_>` to `std::option::Option<Vec<_>>`
+     = note: expected enum `std::option::Option<Vec<_>>`
+              found struct `Vec<_>`
+help: try wrapping the expression in `Some`
+     |
+1172 |             optimizer_state: Some(self.optimizer.state_dict()?),
+     |                              +++++                            +
+
+error[E0308]: `?` operator has incompatible types
+    --> src/training/trainers/reconstruction.rs:1173:30
+     |
+1173 |             scheduler_state: self.scheduler.state_dict()?,
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Option<Vec<u8>>`, found `Vec<u8>`
+     |
+     = note: `?` operator cannot convert from `Vec<_>` to `std::option::Option<Vec<_>>`
+     = note: expected enum `std::option::Option<Vec<_>>`
+              found struct `Vec<_>`
+help: try wrapping the expression in `Some`
+     |
+1173 |             scheduler_state: Some(self.scheduler.state_dict()?),
+     |                              +++++                            +
+
+error[E0063]: missing field `metadata` in initializer of `TrainingCheckpoint`
+    --> src/training/trainers/reconstruction.rs:1168:26
+     |
+1168 |         let checkpoint = TrainingCheckpoint {
+     |                          ^^^^^^^^^^^^^^^^^^ missing `metadata`
+
+error[E0308]: mismatched types
+   --> src/training/trainers/supervised.rs:739:54
+    |
+739 |             self.var_map.all_vars().iter().for_each(|(_, var)| {
+    |                                                      ^^^^^^^^
+    |                                                      |
+    |                                                      expected `Var`, found `(_, _)`
+    |                                                      expected due to this
+    |
+    = note: expected struct `Var`
+                found tuple `(_, _)`
+
+error[E0502]: cannot borrow `*self` as immutable because it is also borrowed as mutable
+   --> src/training/trainers/supervised.rs:946:35
+    |
+939 |         let val_loader = self.val_loader.as_mut().unwrap();
+    |                          --------------- mutable borrow occurs here
+940 |         
+941 |         while let Some(batch) = val_loader.next_batch().await? {
+    |                                 ---------- mutable borrow later used here
+...
+946 |             let tokenized_batch = self.tokenize_batch(&batch)?;
+    |                                   ^^^^ immutable borrow occurs here
+
+error[E0499]: cannot borrow `*self` as mutable more than once at a time
+   --> src/training/trainers/supervised.rs:949:51
+    |
+939 |         let val_loader = self.val_loader.as_mut().unwrap();
+    |                          --------------- first mutable borrow occurs here
+940 |         
+941 |         while let Some(batch) = val_loader.next_batch().await? {
+    |                                 ---------- first borrow later used here
+...
+949 |             let (_, loss_metrics, task_metrics) = self.supervised_step(tokenized_batch)?;
+    |                                                   ^^^^ second mutable borrow occurs here
+
+error[E0308]: `?` operator has incompatible types
+    --> src/training/trainers/supervised.rs:1112:30
+     |
+1112 |             optimizer_state: self.optimizer.state_dict()?,
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Option<Vec<u8>>`, found `Vec<u8>`
+     |
+     = note: `?` operator cannot convert from `Vec<_>` to `std::option::Option<Vec<_>>`
+     = note: expected enum `std::option::Option<Vec<_>>`
+              found struct `Vec<_>`
+help: try wrapping the expression in `Some`
+     |
+1112 |             optimizer_state: Some(self.optimizer.state_dict()?),
+     |                              +++++                            +
+
+error[E0308]: `?` operator has incompatible types
+    --> src/training/trainers/supervised.rs:1113:30
+     |
+1113 |             scheduler_state: self.scheduler.state_dict()?,
+     |                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Option<Vec<u8>>`, found `Vec<u8>`
+     |
+     = note: `?` operator cannot convert from `Vec<_>` to `std::option::Option<Vec<_>>`
+     = note: expected enum `std::option::Option<Vec<_>>`
+              found struct `Vec<_>`
+help: try wrapping the expression in `Some`
+     |
+1113 |             scheduler_state: Some(self.scheduler.state_dict()?),
+     |                              +++++                            +
+
+error[E0063]: missing field `metadata` in initializer of `TrainingCheckpoint`
+    --> src/training/trainers/supervised.rs:1108:26
+     |
+1108 |         let checkpoint = TrainingCheckpoint {
+     |                          ^^^^^^^^^^^^^^^^^^ missing `metadata`
+
+error[E0308]: mismatched types
+   --> src/training/checkpoints/manager.rs:225:50
+    |
+225 |         if self.best_checkpoint.as_ref() == Some(path) {
+    |                                             ---- ^^^^ expected `&PathBuf`, found `&Path`
+    |                                             |
+    |                                             arguments to this enum variant are incorrect
+    |
+    = note: expected reference `&PathBuf`
+               found reference `&std::path::Path`
+help: the type constructed contains `&std::path::Path` due to the type of the argument passed
+   --> src/training/checkpoints/manager.rs:225:45
+    |
+225 |         if self.best_checkpoint.as_ref() == Some(path) {
+    |                                             ^^^^^----^
+    |                                                  |
+    |                                                  this argument influences the type of `Some`
+note: tuple variant defined here
+   --> /rustc/17067e9ac6d7ecb70e50f92c1944e545188d2359/library/core/src/option.rs:580:5
+
+warning: unused variable: `metadata`
+   --> src/training/checkpoints/manager.rs:337:13
+    |
+337 |         let metadata = self.create_safetensors_metadata(checkpoint)?;
+    |             ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_metadata`
+
+warning: unused variable: `config`
+   --> src/training/checkpoints/recovery.rs:411:42
+    |
+411 |     async fn attempt_recovery(&mut self, config: &TrainingConfig) -> Result<PathBuf> {
+    |                                          ^^^^^^ help: if this is intentional, prefix it with an underscore: `_config`
+
+warning: variable does not need to be mutable
+   --> src/training/metrics/tracker.rs:209:17
+    |
+209 |             let mut interval = tokio::time::interval(self.config.collection_interval);
+    |                 ----^^^^^^^^
+    |                 |
+    |                 help: remove this `mut`
+
+error[E0499]: cannot borrow `*self` as mutable more than once at a time
+   --> src/training/metrics/tracker.rs:438:25
+    |
+432 |         if let Some(interval) = &mut self.collection_timer {
+    |                                 -------------------------- first mutable borrow occurs here
+433 |             loop {
+434 |                 interval.tick().await;
+    |                 -------- first borrow later used here
+...
+438 |                 let _ = self.collect_metrics(current.step, current.epoch).await;
+    |                         ^^^^ second mutable borrow occurs here
+
+error[E0277]: the trait bound `[TrainingMetrics]: From<VecDeque<TrainingMetrics>>` is not satisfied
+   --> src/training/metrics/tracker.rs:504:54
+    |
+504 |             match exporter.export(&metrics, &history.into()).await {
+    |                                                      ^^^^ the trait `From<VecDeque<TrainingMetrics>>` is not implemented for `[TrainingMetrics]`
+    |
+    = help: the following other types implement trait `From<T>`:
+              `&[ascii::ascii_char::AsciiChar]` implements `From<&ascii::ascii_str::AsciiStr>`
+              `&[u32; 4]` implements `From<&ppv_lite86::x86_64::vec128_storage>`
+              `&[u8]` implements `From<&ascii::ascii_str::AsciiStr>`
+              `&[u8]` implements `From<&hdf5::types::FixedAscii<N>>`
+              `&[u8]` implements `From<&hdf5::types::FixedUnicode<N>>`
+              `&[u8]` implements `From<&hdf5::types::VarLenAscii>`
+              `&[u8]` implements `From<&hdf5::types::VarLenUnicode>`
+              `&[u8]` implements `From<regex::regex::bytes::Match<'_>>`
+            and 36 others
+    = note: required for `VecDeque<TrainingMetrics>` to implement `Into<[TrainingMetrics]>`
+
+error[E0277]: the trait bound `anyhow::Error: StdError` is not satisfied
+  --> src/encoder/bert.rs:25:26
+   |
+25 |             .map_err(|e| Box::new(e) as Box<dyn Error>)?;
+   |                          ^^^^^^^^^^^ the trait `StdError` is not implemented for `anyhow::Error`
+   |
+   = note: required for the cast from `Box<anyhow::Error>` to `Box<dyn StdError>`
+
+error[E0599]: no method named `map` found for reference `&[u32]` in the current scope
+  --> src/encoder/tokenizer.rs:93:53
+   |
+93 |             token_type_ids: encoding.get_type_ids().map(|ids| ids.to_vec()),
+   |                                                     ^^^ `&[u32]` is not an iterator
+   |
+help: call `.into_iter()` first
+   |
+93 |             token_type_ids: encoding.get_type_ids().into_iter().map(|ids| ids.to_vec()),
+   |                                                     ++++++++++++
+
+warning: use of deprecated method `rand::Rng::gen`: Renamed to `random` to avoid conflict with the new `gen` keyword in Rust 2024.
+   --> src/hypernetwork/models.rs:177:20
+    |
+177 |             if rng.gen::<f32>() > self.dropout_prob {
+    |                    ^^^
+
+error[E0277]: `(dyn Fn(usize) -> usize + 'static)` doesn't implement `Debug`
+  --> src/hypernetwork/architectures.rs:74:5
+   |
+70 | #[derive(Debug, Clone)]
+   |          ----- in this derive macro expansion
+...
+74 |     in_features_fn: Box<dyn Fn(usize) -> usize>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `(dyn Fn(usize) -> usize + 'static)` cannot be formatted using `{:?}` because it doesn't implement `Debug`
+   |
+   = help: the trait `Debug` is not implemented for `(dyn Fn(usize) -> usize + 'static)`
+
+error[E0277]: the trait bound `dyn Fn(usize) -> usize: Clone` is not satisfied
+  --> src/hypernetwork/architectures.rs:74:5
+   |
+70 | #[derive(Debug, Clone)]
+   |                 ----- in this derive macro expansion
+...
+74 |     in_features_fn: Box<dyn Fn(usize) -> usize>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `dyn Fn(usize) -> usize`
+   |
+   = note: required for `Box<dyn Fn(usize) -> usize>` to implement `Clone`
+help: use parentheses to call this trait object
+   |
+74 |     in_features_fn: Box<dyn Fn(usize) -> usize>(/* usize */),
+   |                                                +++++++++++++
+
+error[E0277]: the trait bound `dyn Fn(usize) -> usize: Clone` is not satisfied
+  --> src/hypernetwork/architectures.rs:75:5
+   |
+70 | #[derive(Debug, Clone)]
+   |                 ----- in this derive macro expansion
+...
+75 |     out_features_fn: Box<dyn Fn(usize) -> usize>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `dyn Fn(usize) -> usize`
+   |
+   = note: required for `Box<dyn Fn(usize) -> usize>` to implement `Clone`
+help: use parentheses to call this trait object
+   |
+75 |     out_features_fn: Box<dyn Fn(usize) -> usize>(/* usize */),
+   |                                                 +++++++++++++
+
+error[E0369]: binary operation `==` cannot be applied to type `LayerType`
+   --> src/hypernetwork/architectures.rs:239:63
+    |
+239 |                 if arch_name == "LLaMA" && pattern.layer_type == LayerType::MLP {
+    |                                            ------------------ ^^ -------------- LayerType
+    |                                            |
+    |                                            LayerType
+    |
+note: an implementation of `PartialEq` might be missing for `LayerType`
+   --> src/hypernetwork/lora.rs:67:1
+    |
+67  | pub enum LayerType {
+    | ^^^^^^^^^^^^^^^^^^ must implement `PartialEq`
+help: consider annotating `LayerType` with `#[derive(PartialEq)]`
+   --> src/hypernetwork/lora.rs:67:1
+    |
+67  + #[derive(PartialEq)]
+68  | pub enum LayerType {
+    |
+
+warning: use of deprecated method `rand::Rng::gen_range`: Renamed to `random_range`
+  --> src/lora/parameters.rs:70:27
+   |
+70 |             *weight = rng.gen_range(-xavier_bound..xavier_bound);
+   |                           ^^^^^^^^^
+
+error[E0599]: no variant or associated item named `Generation` found for enum `error::Error` in the current scope
+   --> src/lora/generation.rs:260:45
+    |
+260 |             return Err(crate::error::Error::Generation(format!(
+    |                                             ^^^^^^^^^^ variant or associated item not found in `Error`
+    |
+   ::: src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | -------------- variant or associated item `Generation` not found for this enum
+    |
+note: if you're trying to build a new `error::Error` consider using one of the following associated functions:
+      error::Error::config
+      error::Error::encoder
+      error::Error::hypernetwork
+      error::Error::lora_generation
+      and 4 others
+   --> src/error.rs:62:5
+    |
+62  |     pub fn config(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+67  |     pub fn encoder(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+72  |     pub fn hypernetwork(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+77  |     pub fn lora_generation(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no variant or associated item named `Generation` found for enum `error::Error` in the current scope
+   --> src/lora/generation.rs:278:49
+    |
+278 |                 return Err(crate::error::Error::Generation(
+    |                                                 ^^^^^^^^^^ variant or associated item not found in `Error`
+    |
+   ::: src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | -------------- variant or associated item `Generation` not found for this enum
+    |
+note: if you're trying to build a new `error::Error` consider using one of the following associated functions:
+      error::Error::config
+      error::Error::encoder
+      error::Error::hypernetwork
+      error::Error::lora_generation
+      and 4 others
+   --> src/error.rs:62:5
+    |
+62  |     pub fn config(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+67  |     pub fn encoder(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+72  |     pub fn hypernetwork(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+...
+77  |     pub fn lora_generation(msg: impl Into<String>) -> Self {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0277]: `?` couldn't convert the error to `error::Error`
+   --> src/lora/generation.rs:312:41
+    |
+312 |             lora_params.add_layer(layer)?;
+    |                         ----------------^ the trait `From<std::string::String>` is not implemented for `error::Error`
+    |                         |
+    |                         this can't be annotated with `?` because it has type `Result<_, std::string::String>`
+    |
+note: `error::Error` needs to implement `From<std::string::String>`
+   --> src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | ^^^^^^^^^^^^^^
+    = note: the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+    = help: the following other types implement trait `From<T>`:
+              `error::Error` implements `From<anyhow::Error>`
+              `error::Error` implements `From<candle_core::Error>`
+              `error::Error` implements `From<serde_json::Error>`
+              `error::Error` implements `From<std::io::Error>`
+
+warning: use of deprecated method `rand::Rng::gen_range`: Renamed to `random_range`
+   --> src/lora/generation.rs:359:34
+    |
+359 |             let noise: f32 = rng.gen_range(-1.0..1.0) * self.config.noise_level;
+    |                                  ^^^^^^^^^
+
+error[E0277]: the trait bound `candle_core::Tensor: Serialize` is not satisfied
+    --> src/lora/mod.rs:17:24
+     |
+17   | #[derive(Debug, Clone, Serialize, Deserialize)]
+     |                        ^^^^^^^^^ the trait `Serialize` is not implemented for `candle_core::Tensor`
+18   | pub struct LoraWeights {
+19   |     /// A matrix (input_dim x rank)
+     |     ------------------------------- required by a bound introduced by this call
+     |
+     = note: for local types consider adding `#[derive(serde::Serialize)]` to your `candle_core::Tensor` type
+     = note: for types from other crates check whether the crate offers a `serde` feature flag
+     = help: the following other types implement trait `Serialize`:
+               &'a T
+               &'a mut T
+               ()
+               (T,)
+               (T0, T1)
+               (T0, T1, T2)
+               (T0, T1, T2, T3)
+               (T0, T1, T2, T3, T4)
+             and 440 others
+note: required by a bound in `config::_::_serde::ser::SerializeStruct::serialize_field`
+    --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.219/src/ser/mod.rs:1866:21
+     |
+1864 |     fn serialize_field<T>(&mut self, key: &'static str, value: &T) -> Result<(), Self::Error>
+     |        --------------- required by a bound in this associated function
+1865 |     where
+1866 |         T: ?Sized + Serialize;
+     |                     ^^^^^^^^^ required by this bound in `SerializeStruct::serialize_field`
+     = note: this error originates in the derive macro `Serialize` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0277]: the trait bound `candle_core::Tensor: Deserialize<'_>` is not satisfied
+    --> src/lora/mod.rs:20:12
+     |
+20   |     pub a: Tensor,
+     |            ^^^^^^ the trait `Deserialize<'_>` is not implemented for `candle_core::Tensor`
+     |
+     = note: for local types consider adding `#[derive(serde::Deserialize)]` to your `candle_core::Tensor` type
+     = note: for types from other crates check whether the crate offers a `serde` feature flag
+     = help: the following other types implement trait `Deserialize<'de>`:
+               &'a [u8]
+               &'a std::path::Path
+               &'a str
+               ()
+               (T,)
+               (T0, T1)
+               (T0, T1, T2)
+               (T0, T1, T2, T3)
+             and 463 others
+note: required by a bound in `next_element`
+    --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.219/src/de/mod.rs:1732:12
+     |
+1730 |     fn next_element<T>(&mut self) -> Result<Option<T>, Self::Error>
+     |        ------------ required by a bound in this associated function
+1731 |     where
+1732 |         T: Deserialize<'de>,
+     |            ^^^^^^^^^^^^^^^^ required by this bound in `SeqAccess::next_element`
+
+error[E0277]: the trait bound `candle_core::Tensor: Deserialize<'_>` is not satisfied
+    --> src/lora/mod.rs:22:12
+     |
+22   |     pub b: Tensor,
+     |            ^^^^^^ the trait `Deserialize<'_>` is not implemented for `candle_core::Tensor`
+     |
+     = note: for local types consider adding `#[derive(serde::Deserialize)]` to your `candle_core::Tensor` type
+     = note: for types from other crates check whether the crate offers a `serde` feature flag
+     = help: the following other types implement trait `Deserialize<'de>`:
+               &'a [u8]
+               &'a std::path::Path
+               &'a str
+               ()
+               (T,)
+               (T0, T1)
+               (T0, T1, T2)
+               (T0, T1, T2, T3)
+             and 463 others
+note: required by a bound in `next_element`
+    --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.219/src/de/mod.rs:1732:12
+     |
+1730 |     fn next_element<T>(&mut self) -> Result<Option<T>, Self::Error>
+     |        ------------ required by a bound in this associated function
+1731 |     where
+1732 |         T: Deserialize<'de>,
+     |            ^^^^^^^^^^^^^^^^ required by this bound in `SeqAccess::next_element`
+
+error[E0277]: the trait bound `candle_core::Tensor: Deserialize<'_>` is not satisfied
+    --> src/lora/mod.rs:20:12
+     |
+20   |     pub a: Tensor,
+     |            ^^^^^^ the trait `Deserialize<'_>` is not implemented for `candle_core::Tensor`
+     |
+     = note: for local types consider adding `#[derive(serde::Deserialize)]` to your `candle_core::Tensor` type
+     = note: for types from other crates check whether the crate offers a `serde` feature flag
+     = help: the following other types implement trait `Deserialize<'de>`:
+               &'a [u8]
+               &'a std::path::Path
+               &'a str
+               ()
+               (T,)
+               (T0, T1)
+               (T0, T1, T2)
+               (T0, T1, T2, T3)
+             and 463 others
+note: required by a bound in `next_value`
+    --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.219/src/de/mod.rs:1871:12
+     |
+1869 |     fn next_value<V>(&mut self) -> Result<V, Self::Error>
+     |        ---------- required by a bound in this associated function
+1870 |     where
+1871 |         V: Deserialize<'de>,
+     |            ^^^^^^^^^^^^^^^^ required by this bound in `MapAccess::next_value`
+
+error[E0277]: the trait bound `candle_core::Tensor: Deserialize<'_>` is not satisfied
+    --> src/lora/mod.rs:22:12
+     |
+22   |     pub b: Tensor,
+     |            ^^^^^^ the trait `Deserialize<'_>` is not implemented for `candle_core::Tensor`
+     |
+     = note: for local types consider adding `#[derive(serde::Deserialize)]` to your `candle_core::Tensor` type
+     = note: for types from other crates check whether the crate offers a `serde` feature flag
+     = help: the following other types implement trait `Deserialize<'de>`:
+               &'a [u8]
+               &'a std::path::Path
+               &'a str
+               ()
+               (T,)
+               (T0, T1)
+               (T0, T1, T2)
+               (T0, T1, T2, T3)
+             and 463 others
+note: required by a bound in `next_value`
+    --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.219/src/de/mod.rs:1871:12
+     |
+1869 |     fn next_value<V>(&mut self) -> Result<V, Self::Error>
+     |        ---------- required by a bound in this associated function
+1870 |     where
+1871 |         V: Deserialize<'de>,
+     |            ^^^^^^^^^^^^^^^^ required by this bound in `MapAccess::next_value`
+
+error[E0277]: the trait bound `candle_core::Tensor: Deserialize<'_>` is not satisfied
+  --> src/lora/mod.rs:17:35
+   |
+17 | #[derive(Debug, Clone, Serialize, Deserialize)]
+   |                                   ^^^^^^^^^^^ the trait `Deserialize<'_>` is not implemented for `candle_core::Tensor`
+   |
+   = note: for local types consider adding `#[derive(serde::Deserialize)]` to your `candle_core::Tensor` type
+   = note: for types from other crates check whether the crate offers a `serde` feature flag
+   = help: the following other types implement trait `Deserialize<'de>`:
+             &'a [u8]
+             &'a std::path::Path
+             &'a str
+             ()
+             (T,)
+             (T0, T1)
+             (T0, T1, T2)
+             (T0, T1, T2, T3)
+           and 463 others
+note: required by a bound in `config::_::_serde::__private::de::missing_field`
+  --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/serde-1.0.219/src/private/de.rs:25:8
+   |
+23 | pub fn missing_field<'de, V, E>(field: &'static str) -> Result<V, E>
+   |        ------------- required by a bound in this function
+24 | where
+25 |     V: Deserialize<'de>,
+   |        ^^^^^^^^^^^^^^^^ required by this bound in `missing_field`
+   = note: this error originates in the derive macro `Deserialize` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0308]: mismatched types
+   --> src/lora/mod.rs:51:9
+    |
+47  |     pub fn forward(&self, input: &Tensor) -> Result<Tensor> {
+    |                                              -------------- expected `std::result::Result<candle_core::Tensor, anyhow::Error>` because of return type
+...
+51  |         output.mul(&Tensor::new(self.alpha, input.device())?)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `anyhow::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `anyhow::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `anyhow::Error` is defined in crate `anyhow`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.98/src/lib.rs:393:1
+    |
+393 | pub struct Error {
+    | ^^^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+51  |         Ok(output.mul(&Tensor::new(self.alpha, input.device())?)?)
+    |         +++                                                     ++
+
+error[E0308]: mismatched types
+   --> src/lora/mod.rs:58:9
+    |
+55  |     pub fn get_merged_weights(&self) -> Result<Tensor> {
+    |                                         -------------- expected `std::result::Result<candle_core::Tensor, anyhow::Error>` because of return type
+...
+58  |         merged.mul(&Tensor::new(self.alpha, self.a.device())?)
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `anyhow::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `anyhow::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `anyhow::Error` is defined in crate `anyhow`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.98/src/lib.rs:393:1
+    |
+393 | pub struct Error {
+    | ^^^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+58  |         Ok(merged.mul(&Tensor::new(self.alpha, self.a.device())?)?)
+    |         +++                                                      ++
+
+error[E0277]: the trait bound `candle_core::Shape: From<&Vec<usize>>` is not satisfied
+   --> src/lora/mod.rs:67:48
+    |
+67  |         self.a = Tensor::from_slice(a_weights, &a_shape, &device)?;
+    |                  ------------------            ^^^^^^^^ the trait `From<&Vec<usize>>` is not implemented for `candle_core::Shape`
+    |                  |
+    |                  required by a bound introduced by this call
+    |
+    = note: required for `&Vec<usize>` to implement `Into<candle_core::Shape>`
+    = note: required for `&Vec<usize>` to implement `ShapeWithOneHole`
+note: required by a bound in `candle_core::Tensor::from_slice`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor.rs:519:26
+    |
+519 |     pub fn from_slice<S: ShapeWithOneHole, D: crate::WithDType>(
+    |                          ^^^^^^^^^^^^^^^^ required by this bound in `Tensor::from_slice`
+help: consider dereferencing here
+    |
+67  |         self.a = Tensor::from_slice(a_weights, &*a_shape, &device)?;
+    |                                                 +
+
+error[E0277]: the trait bound `candle_core::Shape: From<&Vec<usize>>` is not satisfied
+   --> src/lora/mod.rs:71:48
+    |
+71  |         self.b = Tensor::from_slice(b_weights, &b_shape, &device)?;
+    |                  ------------------            ^^^^^^^^ the trait `From<&Vec<usize>>` is not implemented for `candle_core::Shape`
+    |                  |
+    |                  required by a bound introduced by this call
+    |
+    = note: required for `&Vec<usize>` to implement `Into<candle_core::Shape>`
+    = note: required for `&Vec<usize>` to implement `ShapeWithOneHole`
+note: required by a bound in `candle_core::Tensor::from_slice`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor.rs:519:26
+    |
+519 |     pub fn from_slice<S: ShapeWithOneHole, D: crate::WithDType>(
+    |                          ^^^^^^^^^^^^^^^^ required by this bound in `Tensor::from_slice`
+help: consider dereferencing here
+    |
+71  |         self.b = Tensor::from_slice(b_weights, &*b_shape, &device)?;
+    |                                                 +
+
+error[E0308]: mismatched types
+   --> src/lora/mod.rs:213:13
+    |
+209 |     pub fn apply_layer(&self, layer_name: &str, input: &Tensor) -> Result<Tensor> {
+    |                                                                    -------------- expected `std::result::Result<candle_core::Tensor, anyhow::Error>` because of return type
+...
+213 |             input.add(&lora_output)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^ expected `anyhow::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `anyhow::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `anyhow::Error` is defined in crate `anyhow`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.98/src/lib.rs:393:1
+    |
+393 | pub struct Error {
+    | ^^^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+213 |             Ok(input.add(&lora_output)?)
+    |             +++                       ++
+
+error[E0599]: no method named `forward` found for reference `&candle_nn::Linear` in the current scope
+   --> src/projection.rs:174:23
+    |
+174 |             x = layer.forward(&x)?;
+    |                       ^^^^^^^
+    |
+    = help: items from traits can only be used if the trait is in scope
+help: there is a method `forward_t` with a similar name, but with different arguments
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/lib.rs:166:5
+    |
+166 |     fn forward_t(&self, xs: &Tensor, train: bool) -> Result<Tensor>;
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+help: trait `Module` which provides `forward` is implemented but not in scope; perhaps you want to import it
+    |
+3   + use candle_core::Module;
+    |
+
+error[E0308]: mismatched types
+   --> src/projection.rs:200:37
+    |
+198 |     fn apply_activation(&self, x: &Tensor) -> Result<Tensor> {
+    |                                               -------------- expected `std::result::Result<candle_core::Tensor, error::Error>` because of return type
+199 |         match self.config.activation {
+200 |             ActivationType::ReLU => x.relu(),
+    |                                     ^^^^^^^^ expected `error::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `error::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `error::Error` is defined in the current crate
+   --> src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | ^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+200 |             ActivationType::ReLU => Ok(x.relu()?),
+    |                                     +++        ++
+
+error[E0308]: mismatched types
+   --> src/projection.rs:204:48
+    |
+204 |                 let inner = x.add(&x_cubed.mul(0.044715)?)?;
+    |                                            --- ^^^^^^^^ expected `&Tensor`, found floating-point number
+    |                                            |
+    |                                            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor.rs:554:16
+    |
+554 |     binary_op!(mul, Mul);
+    |                ^^^
+
+error[E0308]: mismatched types
+   --> src/projection.rs:206:44
+    |
+206 |                 let tanh_input = inner.mul(sqrt_2_pi)?;
+    |                                        --- ^^^^^^^^^ expected `&Tensor`, found `f64`
+    |                                        |
+    |                                        arguments to this method are incorrect
+    |
+note: method defined here
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor.rs:554:16
+    |
+554 |     binary_op!(mul, Mul);
+    |                ^^^
+
+error[E0308]: mismatched types
+   --> src/projection.rs:209:42
+    |
+209 |                 x.mul(&one_plus_tanh.mul(0.5)?)
+    |                                      --- ^^^ expected `&Tensor`, found floating-point number
+    |                                      |
+    |                                      arguments to this method are incorrect
+    |
+note: method defined here
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor.rs:554:16
+    |
+554 |     binary_op!(mul, Mul);
+    |                ^^^
+
+error[E0308]: mismatched types
+   --> src/projection.rs:209:17
+    |
+198 |     fn apply_activation(&self, x: &Tensor) -> Result<Tensor> {
+    |                                               -------------- expected `std::result::Result<candle_core::Tensor, error::Error>` because of return type
+...
+209 |                 x.mul(&one_plus_tanh.mul(0.5)?)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `error::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `error::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `error::Error` is defined in the current crate
+   --> src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | ^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+209 |                 Ok(x.mul(&one_plus_tanh.mul(0.5)?)?)
+    |                 +++                               ++
+
+error[E0308]: mismatched types
+   --> src/projection.rs:217:17
+    |
+198 |     fn apply_activation(&self, x: &Tensor) -> Result<Tensor> {
+    |                                               -------------- expected `std::result::Result<candle_core::Tensor, error::Error>` because of return type
+...
+217 |                 x.mul(&sigmoid)
+    |                 ^^^^^^^^^^^^^^^ expected `error::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `error::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `error::Error` is defined in the current crate
+   --> src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | ^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+217 |                 Ok(x.mul(&sigmoid)?)
+    |                 +++               ++
+
+error[E0277]: the `?` operator can only be applied to values that implement `Try`
+   --> src/projection.rs:224:27
+    |
+224 |                 ones.div(&(ones.add(&exp_neg_x)?)?)
+    |                           ^^^^^^^^^^^^^^^^^^^^^^^^ the `?` operator cannot be applied to type `candle_core::Tensor`
+    |
+    = help: the trait `Try` is not implemented for `candle_core::Tensor`
+
+error[E0308]: mismatched types
+   --> src/projection.rs:224:17
+    |
+198 |     fn apply_activation(&self, x: &Tensor) -> Result<Tensor> {
+    |                                               -------------- expected `std::result::Result<candle_core::Tensor, error::Error>` because of return type
+...
+224 |                 ones.div(&(ones.add(&exp_neg_x)?)?)
+    |                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `error::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `error::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `error::Error` is defined in the current crate
+   --> src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | ^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+224 |                 Ok(ones.div(&(ones.add(&exp_neg_x)?)?)?)
+    |                 +++                                   ++
+
+error[E0308]: mismatched types
+   --> src/projection.rs:244:32
+    |
+244 |         let std = variance.add(eps)?.sqrt()?;
+    |                            --- ^^^ expected `&Tensor`, found floating-point number
+    |                            |
+    |                            arguments to this method are incorrect
+    |
+note: method defined here
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor.rs:553:16
+    |
+553 |     binary_op!(add, Add);
+    |                ^^^
+
+error[E0308]: mismatched types
+   --> src/projection.rs:245:9
+    |
+238 |     fn apply_layer_norm(&self, x: &Tensor) -> Result<Tensor> {
+    |                                               -------------- expected `std::result::Result<candle_core::Tensor, error::Error>` because of return type
+...
+245 |         centered.div(&std)
+    |         ^^^^^^^^^^^^^^^^^^ expected `error::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `error::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `error::Error` is defined in the current crate
+   --> src/error.rs:7:1
+    |
+7   | pub enum Error {
+    | ^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+245 |         Ok(centered.div(&std)?)
+    |         +++                  ++
+
+error[E0308]: mismatched types
+   --> src/training/trainer.rs:515:13
+    |
+500 |     fn supervised_step(&mut self, batch: SupervisedBatch) -> Result<Tensor> {
+    |                                                              -------------- expected `std::result::Result<candle_core::Tensor, anyhow::Error>` because of return type
+...
+515 |             Tensor::new(&[1.0f32], &self.device)
+    |             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `anyhow::Error`, found `candle_core::Error`
+    |
+    = note: `candle_core::Error` and `anyhow::Error` have similar names, but are actually distinct types
+note: `candle_core::Error` is defined in crate `candle_core`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | ^^^^^^^^^^^^^^
+note: `anyhow::Error` is defined in crate `anyhow`
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/anyhow-1.0.98/src/lib.rs:393:1
+    |
+393 | pub struct Error {
+    | ^^^^^^^^^^^^^^^^
+help: use `?` to coerce and return an appropriate `Err`, and wrap the resulting value in `Ok` so the expression remains of type `Result`
+    |
+515 |             Ok(Tensor::new(&[1.0f32], &self.device)?)
+    |             +++                                    ++
+
+error[E0609]: no field `initial_scale` on type `MixedPrecisionConfig`
+   --> src/training/trainers/reconstruction.rs:450:73
+    |
+450 |             Some(GradientScaler::new(config.base_config.mixed_precision.initial_scale))
+    |                                                                         ^^^^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `enabled`, `precision`, `loss_scaling`, `gradient_scaling`
+
+error[E0308]: mismatched types
+   --> src/training/trainers/supervised.rs:887:47
+    |
+887 |                     *existing_a = Tensor::cat(&[existing_a, &a_tensor.unsqueeze(0)?], 0)?;
+    |                                   ----------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&[&mut Tensor]`, found `&[&Tensor; 2]`
+    |                                   |
+    |                                   arguments to this function are incorrect
+    |
+    = note: expected reference `&[&mut candle_core::Tensor]`
+               found reference `&[&candle_core::Tensor; 2]`
+note: associated function defined here
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor_cat.rs:21:12
+    |
+21  |     pub fn cat<A: AsRef<Tensor>, D: Dim>(args: &[A], dim: D) -> Result<Self> {
+    |            ^^^
+
+error[E0308]: mismatched types
+   --> src/training/trainers/supervised.rs:888:47
+    |
+888 |                     *existing_b = Tensor::cat(&[existing_b, &b_tensor.unsqueeze(0)?], 0)?;
+    |                                   ----------- ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `&[&mut Tensor]`, found `&[&Tensor; 2]`
+    |                                   |
+    |                                   arguments to this function are incorrect
+    |
+    = note: expected reference `&[&mut candle_core::Tensor]`
+               found reference `&[&candle_core::Tensor; 2]`
+note: associated function defined here
+   --> /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/tensor_cat.rs:21:12
+    |
+21  |     pub fn cat<A: AsRef<Tensor>, D: Dim>(args: &[A], dim: D) -> Result<Self> {
+    |            ^^^
+
+error[E0599]: the method `clone` exists for enum `Result<Tensor, Error>`, but its trait bounds were not satisfied
+  --> src/training/optimizers/adamw.rs:97:34
+   |
+97 |         *momentum = new_momentum.clone();
+   |                                  ^^^^^ method cannot be called on `Result<Tensor, Error>` due to unsatisfied trait bounds
+   |
+  ::: /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+   |
+20 | pub enum Error {
+   | -------------- doesn't satisfy `candle_core::Error: Clone`
+   |
+   = note: the following trait bounds were not satisfied:
+           `candle_core::Error: Clone`
+           which is required by `std::result::Result<candle_core::Tensor, candle_core::Error>: Clone`
+note: the method `clone` exists on the type `candle_core::Tensor`
+  --> /rustc/17067e9ac6d7ecb70e50f92c1944e545188d2359/library/core/src/clone.rs:165:5
+help: use the `?` operator to extract the `candle_core::Tensor` value, propagating a `Result::Err` value to the caller
+   |
+97 |         *momentum = new_momentum?.clone();
+   |                                 +
+
+error[E0599]: the method `clone` exists for enum `Result<Tensor, Error>`, but its trait bounds were not satisfied
+   --> src/training/optimizers/adamw.rs:102:34
+    |
+102 |         *variance = new_variance.clone();
+    |                                  ^^^^^ method cannot be called on `Result<Tensor, Error>` due to unsatisfied trait bounds
+    |
+   ::: /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+    |
+20  | pub enum Error {
+    | -------------- doesn't satisfy `candle_core::Error: Clone`
+    |
+    = note: the following trait bounds were not satisfied:
+            `candle_core::Error: Clone`
+            which is required by `std::result::Result<candle_core::Tensor, candle_core::Error>: Clone`
+note: the method `clone` exists on the type `candle_core::Tensor`
+   --> /rustc/17067e9ac6d7ecb70e50f92c1944e545188d2359/library/core/src/clone.rs:165:5
+help: use the `?` operator to extract the `candle_core::Tensor` value, propagating a `Result::Err` value to the caller
+    |
+102 |         *variance = new_variance?.clone();
+    |                                 +
+
+error[E0369]: cannot divide `&std::result::Result<candle_core::Tensor, candle_core::Error>` by `f64`
+   --> src/training/optimizers/adamw.rs:108:48
+    |
+108 |         let corrected_momentum = &new_momentum / bias_correction1;
+    |                                  ------------- ^ ---------------- f64
+    |                                  |
+    |                                  &std::result::Result<candle_core::Tensor, candle_core::Error>
+
+error[E0369]: cannot divide `&std::result::Result<candle_core::Tensor, candle_core::Error>` by `f64`
+   --> src/training/optimizers/adamw.rs:109:48
+    |
+109 |         let corrected_variance = &new_variance / bias_correction2;
+    |                                  ------------- ^ ---------------- f64
+    |                                  |
+    |                                  &std::result::Result<candle_core::Tensor, candle_core::Error>
+
+error[E0599]: the method `clone` exists for enum `Result<Tensor, Error>`, but its trait bounds were not satisfied
+  --> src/training/optimizers/sgd.rs:89:45
+   |
+89 |             *momentum_buffer = new_momentum.clone();
+   |                                             ^^^^^ method cannot be called on `Result<Tensor, Error>` due to unsatisfied trait bounds
+   |
+  ::: /home/codespace/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/candle-core-0.9.1/src/error.rs:20:1
+   |
+20 | pub enum Error {
+   | -------------- doesn't satisfy `candle_core::Error: Clone`
+   |
+   = note: the following trait bounds were not satisfied:
+           `candle_core::Error: Clone`
+           which is required by `std::result::Result<candle_core::Tensor, candle_core::Error>: Clone`
+note: the method `clone` exists on the type `candle_core::Tensor`
+  --> /rustc/17067e9ac6d7ecb70e50f92c1944e545188d2359/library/core/src/clone.rs:165:5
+help: use the `?` operator to extract the `candle_core::Tensor` value, propagating a `Result::Err` value to the caller
+   |
+89 |             *momentum_buffer = new_momentum?.clone();
+   |                                            +
+
+error[E0308]: `if` and `else` have incompatible types
+  --> src/training/optimizers/sgd.rs:93:13
+   |
+81 |           let update = if self.momentum > 0.0 {
+   |  ______________________-
+82 | |             // Initialize momentum buffer if needed
+83 | |             self.initialize_momentum(name, param)?;
+...  |
+91 | |             new_momentum
+   | |             ------------ expected because of this
+92 | |         } else {
+93 | |             effective_grad
+   | |             ^^^^^^^^^^^^^^ expected `Result<Tensor, Error>`, found `Tensor`
+94 | |         };
+   | |_________- `if` and `else` have incompatible types
+   |
+   = note: expected enum `std::result::Result<candle_core::Tensor, candle_core::Error>`
+            found struct `candle_core::Tensor`
+help: try wrapping the expression in `Ok`
+   |
+93 |             Ok(effective_grad)
+   |             +++              +
+
+error[E0599]: no method named `iter` found for mutable reference `&mut GradStore` in the current scope
+   --> src/training/optimizers/mod.rs:380:38
+    |
+380 |         for (_id, grad) in gradients.iter() {
+    |                                      ^^^^ method not found in `&mut GradStore`
+
+error[E0689]: can't call method `sqrt` on ambiguous numeric type `{float}`
+   --> src/training/optimizers/mod.rs:385:47
+    |
+385 |         let global_norm = global_norm_squared.sqrt();
+    |                                               ^^^^
+    |
+help: you must specify a type for this binding, like `f32`
+    |
+377 |         let mut global_norm_squared: f32 = 0.0;
+    |                                    +++++
+
+error[E0599]: no method named `iter_mut` found for mutable reference `&mut GradStore` in the current scope
+   --> src/training/optimizers/mod.rs:392:42
+    |
+392 |             for (_id, grad) in gradients.iter_mut() {
+    |                                          ^^^^^^^^ method not found in `&mut GradStore`
+
+error[E0599]: no method named `iter_mut` found for mutable reference `&mut GradStore` in the current scope
+   --> src/training/optimizers/mod.rs:405:38
+    |
+405 |         for (_id, grad) in gradients.iter_mut() {
+    |                                      ^^^^^^^^ method not found in `&mut GradStore`
+
+error[E0689]: can't call method `max` on ambiguous numeric type `{float}`
+   --> src/training/optimizers/mod.rs:408:33
+    |
+408 |             max_grad = max_grad.max(grad_max);
+    |                                 ^^^
+    |
+help: you must specify a type for this binding, like `f32`
+    |
+402 |         let mut max_grad: f32 = 0.0;
+    |                         +++++
+
+error[E0599]: no method named `iter` found for mutable reference `&mut GradStore` in the current scope
+   --> src/training/optimizers/mod.rs:422:38
+    |
+422 |         for (_id, grad) in gradients.iter() {
+    |                                      ^^^^ method not found in `&mut GradStore`
+
+warning: use of deprecated method `rand::Rng::gen_range`: Renamed to `random_range`
+   --> src/utils.rs:369:26
+    |
+369 |             .map(|_| rng.gen_range(-bound..bound))
+    |                          ^^^^^^^^^
+
+warning: unused import: `Module`
+  --> src/training/trainers/supervised.rs:14:37
+   |
+14 | use candle_nn::{VarBuilder, VarMap, Module};
+   |                                     ^^^^^^
+
+warning: unused variable: `model_path`
+   --> src/models/mod.rs:130:5
+    |
+130 |     model_path: &str,
+    |     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_model_path`
+
+warning: unused variable: `config_overrides`
+   --> src/models/mod.rs:132:5
+    |
+132 |     config_overrides: Option<HashMap<String, serde_json::Value>>,
+    |     ^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_config_overrides`
+
+warning: unused variable: `attention_mask`
+   --> src/models/mod.rs:172:43
+    |
+172 |     fn forward(&self, input_ids: &Tensor, attention_mask: Option<&Tensor>) -> Result<ModelOutput> {
+    |                                           ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_attention_mask`
+
+warning: unused variable: `var_builder`
+   --> src/training/trainer.rs:194:13
+    |
+194 |         let var_builder = VarBuilder::from_varmap(&var_map, candle_core::DType::F32, &device);
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_var_builder`
+
+error[E0502]: cannot borrow `*self` as mutable because it is also borrowed as immutable
+   --> src/training/trainer.rs:306:13
+    |
+304 |         if let Some(checkpoint_path) = &self.config.training.resume_from_checkpoint {
+    |                                        -------------------------------------------- immutable borrow occurs here
+305 |             info!("Resuming from checkpoint: {:?}", checkpoint_path);
+306 |             self.load_checkpoint(checkpoint_path.as_path())?;
+    |             ^^^^^---------------^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |             |    |
+    |             |    immutable borrow later used by call
+    |             mutable borrow occurs here
+
+warning: unused variable: `batch`
+   --> src/training/trainer.rs:522:9
+    |
+522 |         batch: Box<dyn std::any::Any>, 
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_batch`
+
+warning: unused variable: `tasks`
+   --> src/training/trainer.rs:523:9
+    |
+523 |         tasks: &[String], 
+    |         ^^^^^ help: if this is intentional, prefix it with an underscore: `_tasks`
+
+warning: unused variable: `task_weights`
+   --> src/training/trainer.rs:524:9
+    |
+524 |         task_weights: &[f64]
+    |         ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_weights`
+
+warning: unused variable: `threshold`
+   --> src/training/trainer.rs:655:21
+    |
+655 |                 let threshold = self.config.optimizer.gradient_clipping.threshold;
+    |                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_threshold`
+
+warning: unused variable: `threshold`
+   --> src/training/trainer.rs:660:21
+    |
+660 |                 let threshold = self.config.optimizer.gradient_clipping.threshold;
+    |                     ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_threshold`
+
+warning: unused variable: `percentile`
+   --> src/training/trainer.rs:663:65
+    |
+663 |             crate::training::config::ClippingMethod::Adaptive { percentile } => {
+    |                                                                 ^^^^^^^^^^ help: try ignoring the field: `percentile: _`
+
+warning: unused variable: `gradients`
+   --> src/training/trainer.rs:651:39
+    |
+651 |     fn apply_gradient_clipping(&self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    |                                       ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `state`
+   --> src/training/trainer.rs:764:43
+    |
+764 |     fn deserialize_model_state(&mut self, state: &[u8]) -> Result<()> {
+    |                                           ^^^^^ help: if this is intentional, prefix it with an underscore: `_state`
+
+warning: unused variable: `gradients`
+   --> src/training/trainers/reconstruction.rs:239:33
+    |
+239 |     fn unscale_gradients(&self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
+    |                                 ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+error[E0596]: cannot borrow `*self` as mutable, as it is behind a `&` reference
+   --> src/training/trainers/reconstruction.rs:246:13
+    |
+246 |             self.update_scale(false);
+    |             ^^^^ `self` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+    |
+help: consider changing this to be a mutable reference
+    |
+239 |     fn unscale_gradients(&mut self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
+    |                           +++
+
+error[E0596]: cannot borrow `*self` as mutable, as it is behind a `&` reference
+   --> src/training/trainers/reconstruction.rs:248:13
+    |
+248 |             self.update_scale(true);
+    |             ^^^^ `self` is a `&` reference, so the data it refers to cannot be borrowed as mutable
+    |
+help: consider changing this to be a mutable reference
+    |
+239 |     fn unscale_gradients(&mut self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
+    |                           +++
+
+error[E0502]: cannot borrow `*self` as mutable because it is also borrowed as immutable
+   --> src/training/trainers/reconstruction.rs:556:13
+    |
+554 |         if let Some(checkpoint_path) = &self.config.base_config.training.resume_from_checkpoint {
+    |                                        -------------------------------------------------------- immutable borrow occurs here
+555 |             info!("Resuming from checkpoint: {:?}", checkpoint_path);
+556 |             self.load_checkpoint(checkpoint_path)?;
+    |             ^^^^^---------------^^^^^^^^^^^^^^^^^
+    |             |    |
+    |             |    immutable borrow later used by call
+    |             mutable borrow occurs here
+
+warning: unused variable: `layer_name`
+   --> src/training/trainers/reconstruction.rs:880:36
+    |
+880 |     fn get_layer_dimensions(&self, layer_name: &str) -> Result<(usize, usize, usize)> {
+    |                                    ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_layer_name`
+
+warning: unused variable: `active_layers`
+   --> src/training/trainers/reconstruction.rs:907:33
+    |
+907 |             if let Some(ref mut active_layers) = self.active_layers {
+    |                                 ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_active_layers`
+
+warning: unused variable: `target_memory_mb`
+    --> src/training/trainers/reconstruction.rs:1000:49
+     |
+1000 |             GradientAccumulationMode::Dynamic { target_memory_mb } => {
+     |                                                 ^^^^^^^^^^^^^^^^ help: try ignoring the field: `target_memory_mb: _`
+
+warning: unused variable: `max_steps`
+    --> src/training/trainers/reconstruction.rs:1004:61
+     |
+1004 |             GradientAccumulationMode::Adaptive { min_steps, max_steps } => {
+     |                                                             ^^^^^^^^^ help: try ignoring the field: `max_steps: _`
+
+warning: unused variable: `gradients`
+    --> src/training/trainers/reconstruction.rs:1012:39
+     |
+1012 |     fn apply_gradient_clipping(&self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+     |                                       ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `gradients`
+    --> src/training/trainers/reconstruction.rs:1046:47
+     |
+1046 |     fn update_parameter_statistics(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+     |                                               ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `decay_factor`
+    --> src/training/trainers/reconstruction.rs:1120:47
+     |
+1120 |             LayerWeightingStrategy::ByDepth { decay_factor } => {
+     |                                               ^^^^^^^^^^^^ help: try ignoring the field: `decay_factor: _`
+
+warning: unused variable: `state`
+    --> src/training/trainers/reconstruction.rs:1220:43
+     |
+1220 |     fn deserialize_model_state(&mut self, state: &[u8]) -> Result<()> {
+     |                                           ^^^^^ help: if this is intentional, prefix it with an underscore: `_state`
+
+warning: unused variable: `base_model`
+   --> src/training/trainers/supervised.rs:317:13
+    |
+317 |         let base_model = self.base_model.read();
+    |             ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_base_model`
+
+warning: unused variable: `input_ids`
+   --> src/training/trainers/supervised.rs:320:13
+    |
+320 |         let input_ids = batch.input_ids.as_ref()
+    |             ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_input_ids`
+
+warning: unused variable: `attention_mask`
+   --> src/training/trainers/supervised.rs:322:13
+    |
+322 |         let attention_mask = batch.attention_mask.as_ref();
+    |             ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_attention_mask`
+
+warning: unused variable: `num_labels`
+   --> src/training/trainers/supervised.rs:429:52
+    |
+429 |             SupervisedTaskType::SequenceLabeling { num_labels } => {
+    |                                                    ^^^^^^^^^^ help: try ignoring the field: `num_labels: _`
+
+warning: unused variable: `predictions`
+   --> src/training/trainers/supervised.rs:452:33
+    |
+452 |     fn compute_f1_scores(&self, predictions: &Tensor, labels: &Tensor, num_classes: usize) -> Result<Vec<f64>> {
+    |                                 ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_predictions`
+
+warning: unused variable: `labels`
+   --> src/training/trainers/supervised.rs:452:55
+    |
+452 |     fn compute_f1_scores(&self, predictions: &Tensor, labels: &Tensor, num_classes: usize) -> Result<Vec<f64>> {
+    |                                                       ^^^^^^ help: if this is intentional, prefix it with an underscore: `_labels`
+
+warning: unused variable: `predictions`
+   --> src/training/trainers/supervised.rs:457:34
+    |
+457 |     fn compute_perplexity(&self, predictions: &Tensor, labels: &Tensor) -> Result<f64> {
+    |                                  ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_predictions`
+
+warning: unused variable: `labels`
+   --> src/training/trainers/supervised.rs:457:56
+    |
+457 |     fn compute_perplexity(&self, predictions: &Tensor, labels: &Tensor) -> Result<f64> {
+    |                                                        ^^^^^^ help: if this is intentional, prefix it with an underscore: `_labels`
+
+warning: unused variable: `var_builder`
+   --> src/training/trainers/supervised.rs:488:13
+    |
+488 |         let var_builder = VarBuilder::from_varmap(&var_map, DType::F32, &device);
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_var_builder`
+
+error[E0502]: cannot borrow `*self` as mutable because it is also borrowed as immutable
+   --> src/training/trainers/supervised.rs:627:13
+    |
+625 |         if let Some(checkpoint_path) = &self.config.base_config.training.resume_from_checkpoint {
+    |                                        -------------------------------------------------------- immutable borrow occurs here
+626 |             info!("Resuming from checkpoint: {:?}", checkpoint_path);
+627 |             self.load_checkpoint(checkpoint_path)?;
+    |             ^^^^^---------------^^^^^^^^^^^^^^^^^
+    |             |    |
+    |             |    immutable borrow later used by call
+    |             mutable borrow occurs here
+
+warning: unused variable: `vocab_size`
+   --> src/training/trainers/supervised.rs:906:21
+    |
+906 |                 let vocab_size = 50000;
+    |                     ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_vocab_size`
+
+warning: unused variable: `task_description`
+   --> src/training/trainers/supervised.rs:994:39
+    |
+994 |     fn generate_task_embedding(&self, task_description: &str) -> Result<Tensor> {
+    |                                       ^^^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_description`
+
+warning: unused variable: `state`
+    --> src/training/trainers/supervised.rs:1160:43
+     |
+1160 |     fn deserialize_model_state(&mut self, state: &[u8]) -> Result<()> {
+     |                                           ^^^^^ help: if this is intentional, prefix it with an underscore: `_state`
+
+warning: unused variable: `device`
+   --> src/training/checkpoints/manager.rs:424:61
+    |
+424 |     fn map_to_device(&self, checkpoint: TrainingCheckpoint, device: &str) -> Result<TrainingCheckpoint> {
+    |                                                             ^^^^^^ help: if this is intentional, prefix it with an underscore: `_device`
+
+warning: unused variable: `logging_config`
+   --> src/training/metrics/tracker.rs:545:28
+    |
+545 |     fn from_logging_config(logging_config: LoggingConfig) -> Self {
+    |                            ^^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_logging_config`
+
+warning: unused variable: `gradients`
+   --> src/training/optimizers/adamw.rs:139:24
+    |
+139 |     fn step(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    |                        ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `gradients`
+   --> src/training/optimizers/sgd.rs:116:24
+    |
+116 |     fn step(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    |                        ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_gradients`
+
+warning: unused variable: `alpha`
+   --> src/training/optimizers/mod.rs:263:34
+    |
+263 |         OptimizerType::RMSprop { alpha } => {
+    |                                  ^^^^^ help: try ignoring the field: `alpha: _`
+
+warning: unused variable: `patience`
+   --> src/training/optimizers/mod.rs:322:42
+    |
+322 |         SchedulerType::ReduceOnPlateau { patience, factor } => {
+    |                                          ^^^^^^^^ help: try ignoring the field: `patience: _`
+
+warning: unused variable: `factor`
+   --> src/training/optimizers/mod.rs:322:52
+    |
+322 |         SchedulerType::ReduceOnPlateau { patience, factor } => {
+    |                                                    ^^^^^^ help: try ignoring the field: `factor: _`
+
+warning: unused variable: `config`
+   --> src/training/loss/supervised.rs:328:9
+    |
+328 |         config: &SupervisedLossConfig,
+    |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_config`
+
+warning: unused variable: `predictions`
+   --> src/training/loss/supervised.rs:374:13
+    |
+374 |         let predictions = logits.argmax_keepdim(D::Minus1)?.squeeze(D::Minus1)?;
+    |             ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_predictions`
+
+warning: value assigned to `a_single` is never read
+   --> src/training/loss/regularization.rs:463:21
+    |
+463 |                     a_single = (a_single * scale)?;
+    |                     ^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` on by default
+
+warning: variable does not need to be mutable
+   --> src/training/loss/regularization.rs:454:17
+    |
+454 |             let mut b_single = b_matrix.get(batch_idx)?;
+    |                 ----^^^^^^^^
+    |                 |
+    |                 help: remove this `mut`
+
+warning: unused variable: `param`
+   --> src/training/loss/utils.rs:143:20
+    |
+143 |         for (name, param) in parameters {
+    |                    ^^^^^ help: if this is intentional, prefix it with an underscore: `_param`
+
+warning: unused variable: `grad`
+   --> src/training/loss/utils.rs:144:23
+    |
+144 |             if let Ok(grad) = loss.backward() {
+    |                       ^^^^ help: if this is intentional, prefix it with an underscore: `_grad`
+
+warning: unused variable: `task_name`
+   --> src/training/loss/composition.rs:306:14
+    |
+306 |         for (task_name, task) in &self.tasks {
+    |              ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_name`
+
+warning: unused variable: `config`
+   --> src/training/loss/composition.rs:354:49
+    |
+354 |     pub fn new(strategy: TaskBalancingStrategy, config: TaskBalancingConfig) -> Self {
+    |                                                 ^^^^^^ help: if this is intentional, prefix it with an underscore: `_config`
+
+warning: unused variable: `current_loss`
+   --> src/training/loss/composition.rs:454:26
+    |
+454 |         for (task_name, &current_loss) in task_losses {
+    |                          ^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_current_loss`
+
+warning: unused variable: `task_losses`
+   --> src/training/loss/composition.rs:485:9
+    |
+485 |         task_losses: &HashMap<String, f64>,
+    |         ^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_task_losses`
+
+Some errors have detailed explanations: E0063, E0277, E0308, E0369, E0382, E0499, E0502, E0596, E0599...
+For more information about an error, try `rustc --explain E0063`.
+warning: `lorax` (lib) generated 99 warnings
+error: could not compile `lorax` (lib) due to 70 previous errors; 99 warnings emitted

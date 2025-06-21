@@ -27,6 +27,10 @@ pub struct ReconstructionBatch {
     pub task_descriptions: Vec<String>,
     /// Task embeddings tensor [batch_size, embedding_dim]
     pub task_embeddings: Option<Tensor>,
+    /// Text embeddings tensor [batch_size, text_embedding_dim]
+    pub text_embeddings: Tensor,
+    /// Target weights for reconstruction loss
+    pub target_weights: Tensor,
     /// LoRA parameters by layer: layer_name -> (A_batch, B_batch)
     /// A_batch: [batch_size, input_dim, rank]
     /// B_batch: [batch_size, rank, output_dim]
@@ -60,6 +64,9 @@ impl ReconstructionBatch {
             self.task_embeddings = Some(embeddings.to_device(device)?);
         }
         
+        self.text_embeddings = self.text_embeddings.to_device(device)?;
+        self.target_weights = self.target_weights.to_device(device)?;
+        
         for (a, b) in self.lora_params.values_mut() {
             *a = a.to_device(device)?;
             *b = b.to_device(device)?;
@@ -71,7 +78,7 @@ impl ReconstructionBatch {
 }
 
 /// Batch of samples for supervised training
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct SupervisedBatch {
     /// Batch size
     pub batch_size: usize,
@@ -275,11 +282,30 @@ impl BatchCollator for ReconstructionCollator {
         // Stack task embeddings
         let batched_embeddings = self.stack_task_embeddings(task_embeddings)?;
         
+        // TODO: Implement proper text embeddings computation from task descriptions
+        // For now, create placeholder text embeddings
+        let text_embedding_dim = 768; // Common embedding dimension
+        let text_embeddings = Tensor::zeros((batch_size, text_embedding_dim), candle_core::DType::F32, &self.device)?;
+        
+        // TODO: Implement proper target weights extraction
+        // For now, create placeholder target weights based on the first LoRA parameter dimensions
+        let target_weights = if let Some((_, (a, b))) = batched_lora_params.iter().next() {
+            // Create a flattened version of LoRA params as target weights
+            let total_params = a.elem_count() + b.elem_count();
+            Tensor::zeros((batch_size, total_params / batch_size), candle_core::DType::F32, &self.device)?
+        } else {
+            return Err(DataError::BatchCollationError {
+                reason: "No LoRA parameters to create target weights".to_string()
+            });
+        };
+        
         let batch = ReconstructionBatch {
             batch_size,
             task_ids,
             task_descriptions,
             task_embeddings: batched_embeddings,
+            text_embeddings,
+            target_weights,
             lora_params: batched_lora_params,
             device: self.device.clone(),
         };
@@ -512,6 +538,10 @@ mod tests {
         assert_eq!(batch.batch_size, 2);
         assert_eq!(batch.task_ids.len(), 2);
         assert!(batch.lora_params.contains_key("layer1"));
+        
+        // Check new fields
+        assert_eq!(batch.text_embeddings.dims(), &[2, 768]); // [batch_size, embedding_dim]
+        assert_eq!(batch.target_weights.dims().len(), 2); // Should be 2D tensor
         
         let (a_batch, b_batch) = batch.lora_params.get("layer1").unwrap();
         assert_eq!(a_batch.dims(), &[2, 512, 16]); // [batch_size, input_dim, rank]

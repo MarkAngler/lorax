@@ -1,7 +1,7 @@
 //! LoRA parameter generation module
 
 use anyhow::{Result, anyhow};
-use ndarray::{Array1, Array2, Array3};
+use ndarray::{Array1, Array2};
 use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
@@ -63,7 +63,7 @@ pub struct LayerConfig {
     pub layer_type: LayerType,
 }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum LayerType {
     Attention,
     MLP,

@@ -2,7 +2,7 @@
 
 use super::{Dataset, BatchCollator, DataError};
 use anyhow::Result;
-use futures::stream::Stream;
+use futures::stream::{Stream, StreamExt};
 use rand::seq::SliceRandom;
 use rand::rng;
 use serde::{Deserialize, Serialize};
@@ -52,6 +52,8 @@ pub struct DataLoader<D: Dataset + 'static> {
     collator: Box<dyn BatchCollator + Send + Sync>,
     /// Current epoch
     epoch: Arc<Mutex<usize>>,
+    /// Current stream (for next_batch interface)
+    current_stream: Arc<Mutex<Option<DataLoaderStream>>>,
 }
 
 impl<D: Dataset + 'static> DataLoader<D> {
@@ -73,6 +75,7 @@ impl<D: Dataset + 'static> DataLoader<D> {
             config,
             collator,
             epoch: Arc::new(Mutex::new(0)),
+            current_stream: Arc::new(Mutex::new(None)),
         }
     }
     
@@ -145,6 +148,33 @@ impl<D: Dataset + 'static> DataLoader<D> {
     /// Get current epoch
     pub async fn current_epoch(&self) -> usize {
         *self.epoch.lock().await
+    }
+    
+    /// Get next batch from the current epoch stream
+    /// This method provides a simpler interface compared to epoch_stream()
+    pub async fn next_batch(&self) -> Result<Option<Box<dyn std::any::Any + Send>>> {
+        let mut stream_guard = self.current_stream.lock().await;
+        
+        // If we don't have a current stream, create one for the new epoch
+        if stream_guard.is_none() {
+            let new_stream = self.epoch_stream().await?;
+            *stream_guard = Some(new_stream);
+        }
+        
+        // Get the next batch from the stream
+        if let Some(stream) = stream_guard.as_mut() {
+            match stream.next().await {
+                Some(Ok(batch)) => Ok(Some(batch)),
+                Some(Err(e)) => Err(e),
+                None => {
+                    // Stream is exhausted, clear it for the next epoch
+                    *stream_guard = None;
+                    Ok(None)
+                }
+            }
+        } else {
+            Ok(None)
+        }
     }
 }
 

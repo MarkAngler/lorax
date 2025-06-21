@@ -3,8 +3,8 @@
 //! This module provides utilities for combining multiple loss functions
 //! and balancing them for multi-task learning scenarios.
 
-use super::{LossFunction, LossConfig, LossMetrics, TaskBalancingStrategy, LossType};
-use crate::training::{Result, Error};
+use super::{LossFunction, LossConfig, LossMetrics, TaskBalancingStrategy};
+use crate::training::Result;
 use candle_core::{Tensor, Device};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -21,12 +21,22 @@ pub struct CompositeLoss {
 }
 
 /// Individual task loss with its weight and function
-#[derive(Clone)]
 pub struct TaskLoss {
     pub name: String,
     pub weight: f64,
     pub loss_fn: Box<dyn LossFunction>,
     pub enabled: bool,
+}
+
+impl Clone for TaskLoss {
+    fn clone(&self) -> Self {
+        Self {
+            name: self.name.clone(),
+            weight: self.weight,
+            loss_fn: self.loss_fn.clone_box(),
+            enabled: self.enabled,
+        }
+    }
 }
 
 /// Task weight management for dynamic balancing
@@ -278,7 +288,7 @@ impl CompositeLoss {
         metrics.insert("task_weight_entropy".to_string(), weight_entropy);
         
         // Task dominance (max weight / mean weight)
-        let max_weight = weights.iter().fold(0.0, |a, &b| a.max(b));
+        let max_weight = weights.iter().fold(0.0f64, |a, &b| a.max(b));
         let mean_weight = weight_sum / weights.len() as f64;
         if mean_weight > 0.0 {
             metrics.insert("task_dominance".to_string(), max_weight / mean_weight);
@@ -417,7 +427,7 @@ impl TaskWeightManager {
         }
         
         // Inverse loss weighting (higher weight for higher loss)
-        let max_loss = task_losses.values().fold(0.0, |a, &b| a.max(b));
+        let max_loss = task_losses.values().fold(0.0f64, |a, &b| a.max(b));
         
         for (task_name, &loss_value) in task_losses {
             if let Some(current_weight) = self.weights.get_mut(task_name) {

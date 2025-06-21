@@ -3,10 +3,9 @@
 //! This module provides a BERT encoder that uses pre-trained models
 //! to generate embeddings from task descriptions.
 
-use super::{TaskEncoder, TaskEmbedding, PoolingLayer, PoolingStrategy};
+use super::{TaskEncoder, PoolingLayer, PoolingStrategy};
 use crate::config::EncoderConfig;
-use std::error::Error;
-use std::sync::Arc;
+use anyhow::Result;
 
 /// BERT-based encoder for task descriptions
 pub struct BertEncoder {
@@ -20,10 +19,9 @@ pub struct BertEncoder {
 
 impl BertEncoder {
     /// Create a new BERT encoder
-    pub fn new(config: EncoderConfig) -> Result<Self, Box<dyn Error>> {
+    pub fn new(config: EncoderConfig) -> Result<Self> {
         // Initialize tokenizer
-        let tokenizer = super::BertTokenizer::from_pretrained(&config.model_name)
-            .map_err(|e| Box::new(e) as Box<dyn Error>)?;
+        let tokenizer = super::BertTokenizer::from_pretrained(&config.model_name)?;
         
         // Create pooling layer
         let pooling = PoolingLayer::new(PoolingStrategy::Mean);
@@ -36,7 +34,7 @@ impl BertEncoder {
     }
     
     /// Generate mock embeddings (placeholder for actual BERT inference)
-    fn generate_embeddings(&self, text: &str) -> Result<Vec<f32>, Box<dyn Error>> {
+    fn generate_embeddings(&self, text: &str) -> Result<Vec<f32>> {
         // TODO: Replace with actual BERT inference
         // For now, generate mock embeddings based on text
         let tokens = text.split_whitespace().collect::<Vec<_>>();

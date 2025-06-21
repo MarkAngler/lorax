@@ -72,7 +72,7 @@ impl AdamWOptimizer {
     /// Initialize momentum and variance for a parameter
     fn initialize_state(&mut self, name: &str, param: &Tensor) -> Result<()> {
         if !self.momentum.contains_key(name) {
-            let zeros = Tensor::zeros(param.shape(), param.dtype(), param.device())?;
+            let zeros = Tensor::zeros_like(param)?;
             self.momentum.insert(name.to_string(), zeros.clone());
             self.variance.insert(name.to_string(), zeros);
         }
@@ -93,35 +93,36 @@ impl AdamWOptimizer {
         let variance = self.variance.get_mut(name).unwrap();
         
         // Update momentum: m_t = β₁ * m_{t-1} + (1 - β₁) * g_t
-        let new_momentum = (momentum * self.beta1)? + (grad * (1.0 - self.beta1))?;
+        let new_momentum = ((&*momentum * self.beta1)? + (grad * (1.0 - self.beta1))?)?;
         *momentum = new_momentum.clone();
         
         // Update variance: v_t = β₂ * v_{t-1} + (1 - β₂) * g_t²
         let grad_squared = grad.sqr()?;
-        let new_variance = (variance * self.beta2)? + (grad_squared * (1.0 - self.beta2))?;
+        let new_variance = ((&*variance * self.beta2)? + (&grad_squared * (1.0 - self.beta2))?)?;
         *variance = new_variance.clone();
         
         // Bias correction
         let bias_correction1 = 1.0 - self.beta1.powi(self.step_count as i32 + 1);
         let bias_correction2 = 1.0 - self.beta2.powi(self.step_count as i32 + 1);
         
-        let corrected_momentum = &new_momentum / bias_correction1;
-        let corrected_variance = &new_variance / bias_correction2;
+        let corrected_momentum = (&new_momentum * (1.0 / bias_correction1))?;
+        let corrected_variance = (&new_variance * (1.0 / bias_correction2))?;
         
         // Compute update
         let sqrt_variance = corrected_variance.sqrt()?;
-        let denominator = sqrt_variance + self.epsilon;
+        let epsilon_tensor = Tensor::new(self.epsilon, param.device())?;
+        let denominator = sqrt_variance.broadcast_add(&epsilon_tensor)?;
         let update = corrected_momentum.div(&denominator)?;
         
         // Apply weight decay (decoupled)
         let weight_decay_update = if self.weight_decay > 0.0 {
-            param * self.weight_decay
+            (param * self.weight_decay)?
         } else {
-            Tensor::zeros(param.shape(), param.dtype(), param.device())?
+            Tensor::zeros_like(param)?
         };
         
         // Final parameter update: θ_t = θ_{t-1} - α * (m̂_t / (√v̂_t + ε) + λ * θ_{t-1})
-        let total_update = (update * self.learning_rate)? + (weight_decay_update * self.learning_rate)?;
+        let total_update = (&update * self.learning_rate)? + (&weight_decay_update * self.learning_rate)?;
         
         // This is where you would actually update the parameter
         // In practice, this would modify the parameter tensor in place
@@ -136,7 +137,7 @@ impl Optimizer for AdamWOptimizer {
         "adamw"
     }
     
-    fn step(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    fn step(&mut self, _gradients: &candle_core::backprop::GradStore) -> Result<()> {
         self.step_count += 1;
         
         // In a real implementation, you would iterate through all parameters

@@ -72,6 +72,8 @@ pub mod io {
 
 /// Memory utilities
 pub mod memory {
+    use super::Result;
+    
     /// Get system memory usage information
     #[derive(Debug, Clone)]
     pub struct MemoryInfo {
@@ -265,6 +267,7 @@ pub mod text {
 pub mod config {
     use serde::{Deserialize, Serialize};
     use std::path::Path;
+    use super::Result;
     
     /// Load configuration from file
     pub fn load_config<T, P>(path: P) -> Result<T>

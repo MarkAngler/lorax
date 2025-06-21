@@ -13,6 +13,7 @@ use lorax::training::{
     OptimizerConfig, OptimizerType, SchedulerType, SchedulerConfig,
     CheckpointingConfig, LoggingConfig, MixedPrecisionConfig,
     TrainingParams, DataConfig,
+    PrecisionType, LossScalingConfig, LossScalingMethod,
 };
 use std::path::Path;
 use std::sync::Arc;
@@ -123,10 +124,15 @@ async fn main() -> Result<()> {
         },
         mixed_precision: MixedPrecisionConfig {
             enabled: true,
-            initial_scale: 65536.0,
-            growth_factor: 2.0,
-            backoff_factor: 0.5,
-            growth_interval: 2000,
+            precision: PrecisionType::FP16,
+            loss_scaling: LossScalingConfig {
+                method: LossScalingMethod::Dynamic,
+                init_scale: 65536.0,
+                growth_factor: 2.0,
+                backoff_factor: 0.5,
+                growth_interval: 2000,
+            },
+            gradient_scaling: true,
         },
         ..Default::default()
     };

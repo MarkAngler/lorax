@@ -170,7 +170,8 @@ pub trait Encoder: Send + Sync {
 pub fn create_encoder(config: &EncoderConfig) -> Result<Arc<dyn TaskEncoder>> {
     match &config.encoder_type {
         crate::config::EncoderType::Bert => {
-            let encoder = BertEncoder::new(config.clone())?;
+            let encoder = BertEncoder::new(config.clone())
+                .map_err(|e| crate::error::Error::encoder(format!("Failed to create BERT encoder: {}", e)))?;
             Ok(Arc::new(encoder))
         }
         crate::config::EncoderType::Roberta => {

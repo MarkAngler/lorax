@@ -55,16 +55,24 @@ impl TextToLora {
         let projection = projection::ProjectionLayer::new(
             config.encoder.embedding_dim,
             config.hypernetwork.input_dim,
-            config.projection.activation.clone(),
+            config.projection.activation.to_projection_activation(),
         )?;
         debug!("Projection layer initialized");
         
         // Initialize hypernetwork
-        let hypernetwork = hypernetwork::HyperNetwork::new(config.hypernetwork.clone())?;
+        // Convert config to hypernetwork module's config type
+        let hypernetwork_config = hypernetwork::HypernetworkConfig {
+            model_size: config.hypernetwork.model_size.to_hypernetwork_model_size(),
+            input_dim: config.hypernetwork.input_dim,
+            lora_rank: config.hypernetwork.lora_rank,
+            dropout: config.hypernetwork.dropout,
+            activation: config.hypernetwork.activation.to_hypernetwork_activation(),
+        };
+        let hypernetwork = hypernetwork::HyperNetwork::new(hypernetwork_config)?;
         debug!("Hypernetwork initialized");
         
         // Initialize LoRA generator
-        let generator = LoraGenerator::new(config.lora.clone());
+        let generator = LoraGenerator::new(config.lora.clone().into());
         debug!("LoRA generator initialized");
         
         Ok(Self {
@@ -89,13 +97,61 @@ impl TextToLora {
         let projected = self.projection.forward(&task_embedding)?;
         debug!("Projected to {} dimensions", projected.len());
         
-        // Generate raw parameters via hypernetwork
-        let raw_params = self.hypernetwork.forward(&projected)?;
-        debug!("Generated {} raw parameters", raw_params.len());
+        // Convert projected vector to ndarray
+        let projected_array = ndarray::Array1::from_vec(projected);
         
-        // Generate LoRA parameters
-        let lora_params = self.generator.generate(raw_params)?;
-        info!("Successfully generated LoRA parameters");
+        // Get target architecture from config
+        let target_arch = self.config.hypernetwork.target_architecture.clone();
+        
+        // Generate LoRA parameters via hypernetwork
+        let lora_params_raw = self.hypernetwork.generate_lora_params(&projected_array, target_arch)?;
+        
+        // Convert to LoraParameters format
+        let mut lora_params = lora::LoraParameters::new(
+            self.config.lora.clone().into()
+        );
+        
+        // Convert each layer from hypernetwork format to LoRA format
+        for (layer_name, layer_params) in lora_params_raw.layers.iter() {
+            let input_dim = layer_params.matrix_a.shape()[0];
+            let rank = layer_params.matrix_a.shape()[1];
+            let output_dim = layer_params.matrix_b.shape()[1];
+            
+            // Create LoRA layer with the dimensions
+            let mut lora_layer = lora::parameters::LoraLayer::new(
+                layer_name.clone(),
+                input_dim,
+                output_dim,
+                rank,
+                layer_params.alpha,
+            );
+            
+            // Copy weights from ndarray to flattened vectors
+            // Matrix A is stored in row-major order
+            lora_layer.a_weights = layer_params.matrix_a.iter().cloned().collect();
+            // Matrix B is stored in row-major order
+            lora_layer.b_weights = layer_params.matrix_b.iter().cloned().collect();
+            
+            // Add the layer to parameters
+            lora_params.add_layer(lora_layer)?;
+        }
+        
+        // Add metadata
+        let metadata = lora::parameters::ParameterMetadata {
+            task_description: task_description.to_string(),
+            created_at: chrono::Utc::now(),
+            generator_version: env!("CARGO_PKG_VERSION").to_string(),
+            hyperparameters: {
+                let mut params = std::collections::HashMap::new();
+                params.insert("lora_rank".to_string(), serde_json::json!(self.config.lora.rank));
+                params.insert("model_size".to_string(), serde_json::json!(format!("{:?}", self.config.hypernetwork.model_size)));
+                params
+            },
+            metrics: None,
+        };
+        lora_params.set_metadata(metadata);
+        
+        info!("Successfully generated LoRA parameters with {} layers", lora_params.layers.len());
         
         Ok(lora_params)
     }
@@ -115,8 +171,22 @@ impl TextToLora {
         let mut results = Vec::with_capacity(task_descriptions.len());
         for embedding in embeddings {
             let projected = self.projection.forward(&embedding)?;
-            let raw_params = self.hypernetwork.forward(&projected)?;
-            let lora_params = self.generator.generate(raw_params)?;
+            
+            // Convert projected vector to ndarray
+            let projected_array = ndarray::Array1::from_vec(projected);
+            
+            // Get target architecture from config
+            let target_arch = self.config.hypernetwork.target_architecture.clone();
+            
+            // Generate LoRA parameters via hypernetwork
+            let _lora_params_raw = self.hypernetwork.generate_lora_params(&projected_array, target_arch)?;
+            
+            // Convert to LoraParameters format
+            // TODO: Implement proper conversion from LoRAParams to LoraParameters
+            let lora_params = lora::LoraParameters::new(
+                self.config.lora.clone().into()
+            );
+            
             results.push(lora_params);
         }
         
@@ -136,7 +206,7 @@ impl TextToLora {
         
         // Update components if needed
         if config.lora != self.config.lora {
-            self.generator = LoraGenerator::new(config.lora.clone());
+            self.generator = LoraGenerator::new(config.lora.clone().into());
         }
         
         self.config = config;

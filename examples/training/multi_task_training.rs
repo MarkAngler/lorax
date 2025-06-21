@@ -17,6 +17,7 @@ use lorax::training::{
     TrainingParams, DataConfig, GradientClippingConfig, ClippingMethod,
     EarlyStoppingConfig, CheckpointMode, SupervisedTaskType,
     RegularizationConfig, RegularizationType,
+    PrecisionType, LossScalingConfig, LossScalingMethod,
 };
 use lorax::training::trainers::supervised::{
     BaseModelConfig, SupervisedSettings, LoraAdaptationConfig, ValidationSettings,
@@ -219,10 +220,15 @@ async fn main() -> Result<()> {
         },
         mixed_precision: MixedPrecisionConfig {
             enabled: true,
-            initial_scale: 65536.0,
-            growth_factor: 2.0,
-            backoff_factor: 0.5,
-            growth_interval: 2000,
+            precision: PrecisionType::FP16,
+            loss_scaling: LossScalingConfig {
+                method: LossScalingMethod::Dynamic,
+                init_scale: 65536.0,
+                growth_factor: 2.0,
+                backoff_factor: 0.5,
+                growth_interval: 2000,
+            },
+            gradient_scaling: true,
         },
         ..Default::default()
     };

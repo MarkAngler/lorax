@@ -47,6 +47,51 @@ impl Default for LoraGeneratorConfig {
     }
 }
 
+impl From<crate::config::LoraConfig> for LoraGeneratorConfig {
+    fn from(config: crate::config::LoraConfig) -> Self {
+        let mut layer_specs = HashMap::new();
+        
+        // Create layer specs based on target modules and model dimensions
+        for module in &config.target_modules {
+            let spec = match module.as_str() {
+                "q_proj" | "k_proj" | "v_proj" | "o_proj" => LayerSpec {
+                    input_dim: config.model_dim,
+                    output_dim: config.model_dim,
+                    rank: Some(config.rank),
+                    alpha: Some(config.alpha),
+                },
+                "gate_proj" | "up_proj" => LayerSpec {
+                    input_dim: config.model_dim,
+                    output_dim: (config.model_dim as f64 * 2.7) as usize, // Approximate MLP expansion
+                    rank: Some(config.rank),
+                    alpha: Some(config.alpha),
+                },
+                "down_proj" => LayerSpec {
+                    input_dim: (config.model_dim as f64 * 2.7) as usize,
+                    output_dim: config.model_dim,
+                    rank: Some(config.rank),
+                    alpha: Some(config.alpha),
+                },
+                _ => LayerSpec {
+                    input_dim: config.model_dim,
+                    output_dim: config.model_dim,
+                    rank: Some(config.rank),
+                    alpha: Some(config.alpha),
+                },
+            };
+            layer_specs.insert(module.clone(), spec);
+        }
+        
+        Self {
+            default_rank: config.rank,
+            default_alpha: config.alpha,
+            layer_specs,
+            add_noise: false,
+            noise_level: 0.01,
+        }
+    }
+}
+
 impl LoraGeneratorConfig {
     /// Default layer specifications for LLaMA architecture
     pub fn default_llama_specs() -> HashMap<String, LayerSpec> {
@@ -212,7 +257,7 @@ impl LoraGenerator {
         // Distribute raw parameters across layers
         let total_params_needed = self.calculate_total_params_needed();
         if raw_params.len() < total_params_needed {
-            return Err(crate::error::Error::Generation(format!(
+            return Err(crate::error::Error::LoraGeneration(format!(
                 "Insufficient parameters: need {}, got {}",
                 total_params_needed,
                 raw_params.len()
@@ -230,7 +275,7 @@ impl LoraGenerator {
             let total_layer_params = a_size + b_size;
             
             if param_offset + total_layer_params > raw_params.len() {
-                return Err(crate::error::Error::Generation(
+                return Err(crate::error::Error::LoraGeneration(
                     "Parameter allocation exceeds available parameters".to_string()
                 ));
             }

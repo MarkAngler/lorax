@@ -14,7 +14,7 @@ pub use lora::{LoRAParams, LoRAGenerator};
 pub use architectures::{TargetArchitecture, ArchitectureHandler};
 
 use anyhow::Result;
-use ndarray::{Array1, Array2};
+use ndarray::Array1;
 use serde::{Deserialize, Serialize};
 
 /// Configuration for the hypernetwork

@@ -282,9 +282,9 @@ impl MetricsTracker {
         // Update collection stats
         let collection_time = collection_start.elapsed();
         self.collection_stats.total_collections += 1;
-        self.collection_stats.avg_collection_time = 
-            (self.collection_stats.avg_collection_time * (self.collection_stats.total_collections - 1) as u32 + collection_time) 
-            / self.collection_stats.total_collections as u32;
+        self.collection_stats.avg_collection_time = Duration::from_secs_f64(
+            (self.collection_stats.avg_collection_time.as_secs_f64() * (self.collection_stats.total_collections - 1) as f64 + collection_time.as_secs_f64()) 
+            / self.collection_stats.total_collections as f64);
         
         if collection_time > self.collection_stats.peak_collection_time {
             self.collection_stats.peak_collection_time = collection_time;
@@ -429,7 +429,8 @@ impl MetricsTracker {
     
     /// Run collection loop for real-time metrics
     async fn run_collection_loop(&mut self) -> Result<()> {
-        if let Some(interval) = &mut self.collection_timer {
+        // Take the interval out temporarily to avoid double mutable borrow
+        if let Some(mut interval) = self.collection_timer.take() {
             loop {
                 interval.tick().await;
                 
@@ -496,12 +497,12 @@ impl MetricsTracker {
     /// Export metrics to all configured exporters
     async fn export_all_metrics(&mut self) -> Result<()> {
         let metrics = self.current_metrics.read().clone();
-        let history = self.metrics_history.read().clone();
+        let history: Vec<TrainingMetrics> = self.metrics_history.read().iter().cloned().collect();
         
         for exporter in &mut self.exporters {
             let export_start = Instant::now();
             
-            match exporter.export(&metrics, &history.into()).await {
+            match exporter.export(&metrics, &history).await {
                 Ok(_) => {
                     let export_time = export_start.elapsed();
                     
@@ -512,9 +513,9 @@ impl MetricsTracker {
                         .or_insert_with(ExportStats::new);
                     
                     stats.total_exports += 1;
-                    stats.avg_export_time = 
-                        (stats.avg_export_time * (stats.total_exports - 1) as u32 + export_time) 
-                        / stats.total_exports as u32;
+                    stats.avg_export_time = Duration::from_secs_f64(
+                        (stats.avg_export_time.as_secs_f64() * (stats.total_exports - 1) as f64 + export_time.as_secs_f64()) 
+                        / stats.total_exports as f64);
                     stats.last_export = Some(export_start);
                     
                     if let Some(tx) = &self.event_tx {

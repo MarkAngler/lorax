@@ -10,7 +10,7 @@ use std::sync::Arc;
 use std::time::{Duration, Instant};
 
 use anyhow::{Result, Context};
-use candle_core::{Device, Tensor, DType};
+use candle_core::{Device, Tensor, DType, IndexOp};
 use candle_nn::{VarBuilder, VarMap};
 use chrono::{DateTime, Utc};
 use parking_lot::RwLock;
@@ -27,6 +27,8 @@ use crate::training::{
     OptimizerState, SchedulerState, create_optimizer, create_scheduler,
     ReconstructionLoss, LossFunctionMetrics, PredictedLoraParams, PredictedLoraLayer,
 };
+use crate::training::config::LogLevel;
+use crate::training::loss::LossFunction;
 use crate::training::data::{Dataset, DataLoader};
 
 /// Configuration specific to reconstruction training
@@ -234,7 +236,7 @@ impl GradientScaler {
         Ok((loss * self.scale)?)
     }
     
-    fn unscale_gradients(&self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
+    fn unscale_gradients(&mut self, gradients: &mut candle_core::backprop::GradStore) -> Result<bool> {
         // Check for inf/nan in gradients
         let has_inf_nan = false; // Would need actual implementation
         
@@ -445,7 +447,7 @@ impl ReconstructionTrainer {
         
         // Initialize gradient scaler if mixed precision is enabled
         let grad_scaler = if config.base_config.mixed_precision.enabled {
-            Some(GradientScaler::new(config.base_config.mixed_precision.initial_scale))
+            Some(GradientScaler::new(config.base_config.mixed_precision.loss_scaling.init_scale))
         } else {
             None
         };
@@ -551,7 +553,8 @@ impl ReconstructionTrainer {
         // Resume from checkpoint if specified
         if let Some(checkpoint_path) = &self.config.base_config.training.resume_from_checkpoint {
             info!("Resuming from checkpoint: {:?}", checkpoint_path);
-            self.load_checkpoint(checkpoint_path)?;
+            let path = checkpoint_path.clone();
+            self.load_checkpoint(&path)?;
         }
         
         // Initialize model for training
@@ -679,7 +682,7 @@ impl ReconstructionTrainer {
             };
             
             // Backward pass
-            let gradients = final_loss.backward()?;
+            let mut gradients = final_loss.backward()?;
             
             // Update parameter statistics
             if self.config.reconstruction.track_param_magnitudes {
@@ -692,7 +695,7 @@ impl ReconstructionTrainer {
             if accumulated_steps >= grad_accum_steps {
                 // Unscale gradients if using mixed precision
                 let skip_update = if let Some(ref mut scaler) = self.grad_scaler {
-                    !scaler.unscale_gradients(&gradients)?
+                    !scaler.unscale_gradients(&mut gradients)?
                 } else {
                     false
                 };
@@ -709,7 +712,7 @@ impl ReconstructionTrainer {
                 accumulated_steps = 0;
                 
                 // Clear gradients
-                self.var_map.all_vars().iter().for_each(|(_, var)| {
+                self.var_map.all_vars().iter().for_each(|var| {
                     // Clear gradients - implementation needed
                 });
             }
@@ -786,6 +789,32 @@ impl ReconstructionTrainer {
     
     /// Perform a reconstruction training step
     fn reconstruction_step(&mut self, batch: ReconstructionBatch) -> Result<(Tensor, LossFunctionMetrics)> {
+        let model = self.model.read();
+        
+        // Filter batch by active layers if progressive training is enabled
+        let filtered_batch = if let Some(ref active_layers) = self.active_layers {
+            self.filter_batch_by_layers(batch, active_layers)?
+        } else {
+            batch
+        };
+        
+        // Forward pass through hypernetwork
+        let predicted_params = self.forward_hypernetwork(&model, &filtered_batch)?;
+        
+        // Compute reconstruction loss
+        let loss_metrics = self.loss_fn.compute_metrics(
+            &filtered_batch as &dyn std::any::Any,
+            &predicted_params as &dyn std::any::Any
+        )?;
+        
+        // Create loss tensor
+        let loss = Tensor::full(loss_metrics.total_loss, (), &self.device)?;
+        
+        Ok((loss, loss_metrics))
+    }
+    
+    /// Perform a reconstruction step for evaluation (non-mutating)
+    fn reconstruction_step_eval(&self, batch: ReconstructionBatch) -> Result<(Tensor, LossFunctionMetrics)> {
         let model = self.model.read();
         
         // Filter batch by active layers if progressive training is enabled
@@ -932,14 +961,20 @@ impl ReconstructionTrainer {
         let mut alignment_scores: Vec<f64> = Vec::new();
         let mut magnitude_ratios: Vec<f64> = Vec::new();
         
-        let val_loader = self.val_loader.as_mut().unwrap();
+        // Collect all batches first to avoid borrow checker issues
+        let mut batches = Vec::new();
+        if let Some(val_loader) = self.val_loader.as_mut() {
+            while let Some(batch) = val_loader.next_batch().await? {
+                let batch = batch.downcast::<ReconstructionBatch>()
+                    .map_err(|_| anyhow::anyhow!("Invalid batch type for reconstruction evaluation"))?;
+                batches.push(*batch);
+            }
+        }
         
-        while let Some(batch) = val_loader.next_batch().await? {
-            let batch = batch.downcast::<ReconstructionBatch>()
-                .map_err(|_| anyhow::anyhow!("Invalid batch type for reconstruction evaluation"))?;
-            
+        // Process the collected batches
+        for batch in batches {
             // Forward pass without gradient computation
-            let (_loss, loss_metrics) = self.reconstruction_step(*batch)?;
+            let (_loss, loss_metrics) = self.reconstruction_step_eval(batch)?;
             
             // Accumulate metrics
             total_loss += loss_metrics.total_loss;
@@ -1057,7 +1092,7 @@ impl ReconstructionTrainer {
         );
         
         // Log layer-specific losses if verbose
-        if self.config.base_config.logging.log_level == "debug" {
+        if matches!(self.config.base_config.logging.level, LogLevel::Debug) {
             for (layer, loss) in &loss_metrics.layer_losses {
                 debug!("  Layer {} loss: {:.6}", layer, loss);
             }
@@ -1079,7 +1114,7 @@ impl ReconstructionTrainer {
         }
         
         // Log per-layer statistics if verbose
-        if self.config.base_config.logging.log_level == "debug" {
+        if matches!(self.config.base_config.logging.level, LogLevel::Debug) {
             for (layer, magnitude) in &self.param_stats.layer_magnitudes {
                 debug!("  Layer {} magnitude: {:.6}", layer, magnitude);
             }
@@ -1167,11 +1202,12 @@ impl ReconstructionTrainer {
             epoch,
             global_step: self.state.global_step,
             model_state: self.serialize_model_state()?,
-            optimizer_state: self.optimizer.state_dict()?,
-            scheduler_state: self.scheduler.state_dict()?,
+            optimizer_state: Some(self.optimizer.state_dict()?),
+            scheduler_state: Some(self.scheduler.state_dict()?),
             metrics: metrics.clone(),
             config: self.config.base_config.clone(),
             timestamp: Utc::now(),
+            metadata: crate::training::checkpoints::CheckpointMetadata::new(),
         };
         
         let path = self.checkpoint_manager.save_checkpoint(checkpoint).await?;

@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Supported target model architectures
-#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub enum TargetArchitecture {
     /// GPT-style decoder-only transformer
     GPT {
@@ -67,12 +67,22 @@ pub struct ArchitectureHandler {
     patterns: HashMap<String, Vec<LayerPattern>>,
 }
 
-#[derive(Debug, Clone)]
 struct LayerPattern {
     name_template: String,
     layer_type: LayerType,
     in_features_fn: Box<dyn Fn(usize) -> usize>,
     out_features_fn: Box<dyn Fn(usize) -> usize>,
+}
+
+impl std::fmt::Debug for LayerPattern {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("LayerPattern")
+            .field("name_template", &self.name_template)
+            .field("layer_type", &self.layer_type)
+            .field("in_features_fn", &"<function>")
+            .field("out_features_fn", &"<function>")
+            .finish()
+    }
 }
 
 impl ArchitectureHandler {

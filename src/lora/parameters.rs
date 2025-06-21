@@ -92,32 +92,32 @@ impl LoraLayer {
     }
     
     /// Validate parameter dimensions
-    pub fn validate(&self) -> Result<(), String> {
+    pub fn validate(&self) -> Result<(), crate::error::Error> {
         let expected_a_size = self.input_dim * self.rank;
         let expected_b_size = self.rank * self.output_dim;
         
         if self.a_weights.len() != expected_a_size {
-            return Err(format!(
+            return Err(crate::error::Error::InvalidInput(format!(
                 "Invalid A matrix size: expected {}, got {}",
                 expected_a_size,
                 self.a_weights.len()
-            ));
+            )));
         }
         
         if self.b_weights.len() != expected_b_size {
-            return Err(format!(
+            return Err(crate::error::Error::InvalidInput(format!(
                 "Invalid B matrix size: expected {}, got {}",
                 expected_b_size,
                 self.b_weights.len()
-            ));
+            )));
         }
         
         if self.rank == 0 {
-            return Err("LoRA rank cannot be zero".to_string());
+            return Err(crate::error::Error::InvalidInput("LoRA rank cannot be zero".to_string()));
         }
         
         if self.alpha <= 0.0 {
-            return Err("LoRA alpha must be positive".to_string());
+            return Err(crate::error::Error::InvalidInput("LoRA alpha must be positive".to_string()));
         }
         
         Ok(())
@@ -170,6 +170,18 @@ impl Default for LoraParameterConfig {
     }
 }
 
+impl From<crate::config::LoraConfig> for LoraParameterConfig {
+    fn from(config: crate::config::LoraConfig) -> Self {
+        Self {
+            target_architecture: "llama".to_string(), // Default architecture
+            default_rank: config.rank,
+            default_alpha: config.alpha,
+            target_modules: config.target_modules,
+            merge_weights: false, // Default to false
+        }
+    }
+}
+
 /// Metadata for LoRA parameters
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ParameterMetadata {
@@ -196,7 +208,7 @@ impl LoraParameters {
     }
     
     /// Add layer parameters
-    pub fn add_layer(&mut self, layer: LoraLayer) -> Result<(), String> {
+    pub fn add_layer(&mut self, layer: LoraLayer) -> Result<(), crate::error::Error> {
         layer.validate()?;
         self.layers.insert(layer.name.clone(), layer);
         Ok(())
@@ -228,7 +240,7 @@ impl LoraParameters {
     }
     
     /// Validate all layers
-    pub fn validate(&self) -> Result<(), String> {
+    pub fn validate(&self) -> Result<(), crate::error::Error> {
         for layer in self.layers.values() {
             layer.validate()?;
         }

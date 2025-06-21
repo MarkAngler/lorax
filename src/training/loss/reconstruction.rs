@@ -4,11 +4,10 @@
 //! to generate LoRA parameters from task descriptions.
 
 use super::{LossFunction, LossConfig, LossMetrics, MatrixLossType, ReductionMethod};
-use crate::training::{Result, Error};
+use crate::training::Result;
 use crate::training::data::ReconstructionBatch;
 use crate::lora::parameters::{LoraParameters, LoraLayer};
-use candle_core::{Tensor, Device, DType};
-use candle_nn as nn;
+use candle_core::{Tensor, Device};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::any::Any;
@@ -170,8 +169,11 @@ impl MatrixLossFunction for CosineLoss {
         let pred_norm = pred_flat.sqr()?.sum_keepdim(D::Minus1)?.sqrt()?;
         let target_norm = target_flat.sqr()?.sum_keepdim(D::Minus1)?.sqrt()?;
         
-        let cosine_sim = &dot_product / (&pred_norm * &target_norm + 1e-8)?;
-        let cosine_loss = (Tensor::ones_like(&cosine_sim)? - cosine_sim)?;
+        let epsilon = Tensor::full(1e-8, pred_norm.shape(), pred_norm.device())?;
+        let norm_product = (&pred_norm * &target_norm)?.add(&epsilon)?;
+        let cosine_sim = dot_product.div(&norm_product)?;
+        let ones = Tensor::ones_like(&cosine_sim)?;
+        let cosine_loss = (&ones - &cosine_sim)?;
         
         match reduction {
             ReductionMethod::Mean => cosine_loss.mean_all(),
@@ -322,7 +324,7 @@ impl ReconstructionLoss {
     }
     
     /// Convert Vec<f32> to Tensor with specified shape
-    fn vec_to_tensor(&self, vec: &[f32], shape: &[usize]) -> Result<Tensor> {
+    fn vec_to_tensor(&self, vec: &[f32], shape: &candle_core::Shape) -> Result<Tensor> {
         let tensor = Tensor::from_slice(vec, (vec.len(),), &self.device)?;
         tensor.reshape(shape).context("Failed to reshape tensor")
     }
@@ -466,21 +468,21 @@ impl ReconstructionLoss {
         let target_b = self.vec_to_tensor(&target.b_weights, predicted.b_matrix.shape())?;
         
         // Flatten and compute cosine similarity
-        let pred_flat = Tensor::cat(&[
-            predicted.a_matrix.flatten_all()?,
-            predicted.b_matrix.flatten_all()?,
-        ], 0)?;
+        let pred_a_flat = predicted.a_matrix.flatten_all()?;
+        let pred_b_flat = predicted.b_matrix.flatten_all()?;
+        let pred_flat = Tensor::cat(&[&pred_a_flat, &pred_b_flat], 0)?;
         
-        let target_flat = Tensor::cat(&[
-            target_a.flatten_all()?,
-            target_b.flatten_all()?,
-        ], 0)?;
+        let target_a_flat = target_a.flatten_all()?;
+        let target_b_flat = target_b.flatten_all()?;
+        let target_flat = Tensor::cat(&[&target_a_flat, &target_b_flat], 0)?;
         
         let dot_product = (&pred_flat * &target_flat)?.sum_all()?;
         let pred_norm = pred_flat.sqr()?.sum_all()?.sqrt()?;
         let target_norm = target_flat.sqr()?.sum_all()?.sqrt()?;
         
-        let alignment = dot_product / (pred_norm * target_norm + 1e-8)?;
+        let epsilon = Tensor::full(1e-8, pred_norm.shape(), pred_norm.device())?;
+        let norm_product = (&pred_norm * &target_norm)?.add(&epsilon)?;
+        let alignment = dot_product.div(&norm_product)?;
         alignment.to_scalar::<f64>().context("Failed to compute alignment")
     }
     
@@ -604,7 +606,7 @@ impl ReconstructionLoss {
                 alpha: 32.0, // Default alpha
             };
             
-            params.add_layer(layer)?;
+            params.add_layer(layer).map_err(|e| anyhow::anyhow!(e))?;
         }
         
         Ok(params)

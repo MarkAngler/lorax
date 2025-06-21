@@ -2,7 +2,7 @@
 
 use crate::error::Result;
 use candle_core::{Tensor, Device, DType};
-use candle_nn::{Linear, VarBuilder};
+use candle_nn::{Linear, VarBuilder, Module};
 use serde::{Deserialize, Serialize};
 
 /// Activation function types
@@ -141,9 +141,9 @@ impl ProjectionLayer {
         device: &Device,
     ) -> Result<Linear> {
         // Xavier/Glorot initialization
-        let fan_in = input_dim as f64;
-        let fan_out = output_dim as f64;
-        let bound = (6.0 / (fan_in + fan_out)).sqrt();
+        let fan_in = input_dim as f32;
+        let fan_out = output_dim as f32;
+        let bound = (6.0f32 / (fan_in + fan_out)).sqrt();
         
         // Create weight matrix
         let weight = Tensor::rand(-bound, bound, (output_dim, input_dim), device)?;
@@ -197,24 +197,35 @@ impl ProjectionLayer {
     /// Apply activation function
     fn apply_activation(&self, x: &Tensor) -> Result<Tensor> {
         match self.config.activation {
-            ActivationType::ReLU => x.relu(),
+            ActivationType::ReLU => Ok(x.relu()?),
             ActivationType::GELU => {
                 // GELU approximation: x * 0.5 * (1 + tanh(sqrt(2/π) * (x + 0.044715 * x³)))
                 let x_cubed = x.powf(3.0)?;
-                let inner = x.add(&x_cubed.mul(0.044715)?)?;
-                let sqrt_2_pi = (2.0 / std::f64::consts::PI).sqrt();
-                let tanh_input = inner.mul(sqrt_2_pi)?;
+                let coeff = Tensor::new(0.044715f32, x.device())?;
+                let inner = x.add(&x_cubed.mul(&coeff)?)?;
+                let sqrt_2_pi = (2.0f32 / std::f32::consts::PI).sqrt();
+                let sqrt_2_pi_tensor = Tensor::new(sqrt_2_pi, x.device())?;
+                let tanh_input = inner.mul(&sqrt_2_pi_tensor)?;
                 let tanh_output = tanh_input.tanh()?;
                 let one_plus_tanh = tanh_output.add(&Tensor::ones_like(&tanh_output)?)?;
-                x.mul(&one_plus_tanh.mul(0.5)?)
+                let half = Tensor::new(0.5f32, x.device())?;
+                Ok(x.mul(&one_plus_tanh.mul(&half)?)?)
             }
             ActivationType::SiLU => {
                 // SiLU: x * sigmoid(x)
-                let sigmoid = x.sigmoid()?;
-                x.mul(&sigmoid)
+                let ones = Tensor::ones_like(x)?;
+                let neg_x = x.neg()?;
+                let exp_neg_x = neg_x.exp()?;
+                let sigmoid = ones.div(&(ones.add(&exp_neg_x)?))?;
+                Ok(x.mul(&sigmoid)?)
             }
-            ActivationType::Tanh => x.tanh(),
-            ActivationType::Sigmoid => x.sigmoid(),
+            ActivationType::Tanh => Ok(x.tanh()?),
+            ActivationType::Sigmoid => {
+                let ones = Tensor::ones_like(x)?;
+                let neg_x = x.neg()?;
+                let exp_neg_x = neg_x.exp()?;
+                Ok(ones.div(&ones.add(&exp_neg_x)?)?)
+            }
             ActivationType::Identity => Ok(x.clone()),
         }
     }
@@ -230,11 +241,19 @@ impl ProjectionLayer {
     fn apply_layer_norm(&self, x: &Tensor) -> Result<Tensor> {
         // Simple layer normalization: (x - mean) / (std + eps)
         let eps = 1e-5;
-        let mean = x.mean_keepdim(1)?;
-        let centered = x.sub(&mean)?;
-        let variance = centered.powf(2.0)?.mean_keepdim(1)?;
-        let std = variance.add(eps)?.sqrt()?;
-        centered.div(&std)
+        
+        // For a [1, 512] tensor, we want to normalize across the feature dimension
+        // mean_keepdim(1) would give [1, 1], but we need to broadcast properly
+        let mean = x.mean(1)?;
+        let mean_expanded = mean.unsqueeze(1)?; // Now [1, 1] shape
+        let centered = x.broadcast_sub(&mean_expanded)?;
+        
+        let variance = centered.powf(2.0)?.mean(1)?;
+        let variance_expanded = variance.unsqueeze(1)?;
+        let eps_tensor = Tensor::new(eps as f32, x.device())?;
+        let std = variance_expanded.broadcast_add(&eps_tensor)?.sqrt()?;
+        
+        Ok(centered.broadcast_div(&std)?)
     }
     
     /// Whether to apply activation on final layer

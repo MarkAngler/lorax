@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 
 use crate::error::{Error, Result};
+use crate::hypernetwork::TargetArchitecture;
 
 /// Main configuration for the Text-to-LoRA system
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -190,6 +191,10 @@ pub struct HypernetworkConfig {
     pub use_residual: bool,
     /// Layer normalization
     pub use_layer_norm: bool,
+    /// LoRA rank for generated adapters
+    pub lora_rank: usize,
+    /// Target model architecture
+    pub target_architecture: TargetArchitecture,
 }
 
 impl Default for HypernetworkConfig {
@@ -203,6 +208,12 @@ impl Default for HypernetworkConfig {
             dropout: 0.1,
             use_residual: true,
             use_layer_norm: true,
+            lora_rank: 8,
+            target_architecture: TargetArchitecture::GPT {
+                hidden_size: 768,
+                num_layers: 12,
+                num_heads: 12,
+            },
         }
     }
 }
@@ -235,6 +246,38 @@ impl ModelSize {
             ModelSize::Small => 2_000_000,
             ModelSize::Medium => 5_000_000,
             ModelSize::Large => 10_000_000,
+        }
+    }
+    
+    /// Convert to hypernetwork module's ModelSize
+    pub fn to_hypernetwork_model_size(&self) -> crate::hypernetwork::ModelSize {
+        match self {
+            ModelSize::Small => crate::hypernetwork::ModelSize::Small,
+            ModelSize::Medium => crate::hypernetwork::ModelSize::Medium,
+            ModelSize::Large => crate::hypernetwork::ModelSize::Large,
+        }
+    }
+}
+
+impl Activation {
+    /// Convert to hypernetwork module's ActivationType
+    pub fn to_hypernetwork_activation(&self) -> crate::hypernetwork::ActivationType {
+        match self {
+            Activation::Relu => crate::hypernetwork::ActivationType::ReLU,
+            Activation::Gelu => crate::hypernetwork::ActivationType::GELU,
+            Activation::Silu => crate::hypernetwork::ActivationType::SiLU,
+            _ => crate::hypernetwork::ActivationType::ReLU, // Default for unsupported types
+        }
+    }
+    
+    /// Convert to projection module's ActivationType
+    pub fn to_projection_activation(&self) -> crate::projection::ActivationType {
+        match self {
+            Activation::Relu => crate::projection::ActivationType::ReLU,
+            Activation::Gelu => crate::projection::ActivationType::GELU,
+            Activation::Silu => crate::projection::ActivationType::SiLU,
+            Activation::Tanh => crate::projection::ActivationType::Tanh,
+            Activation::None => crate::projection::ActivationType::Identity,
         }
     }
 }

@@ -58,7 +58,7 @@ impl SGDOptimizer {
     /// Initialize momentum buffer for a parameter
     fn initialize_momentum(&mut self, name: &str, param: &Tensor) -> Result<()> {
         if !self.momentum_buffers.contains_key(name) && self.momentum > 0.0 {
-            let zeros = Tensor::zeros(param.shape(), param.dtype(), param.device())?;
+            let zeros = Tensor::zeros_like(param)?;
             self.momentum_buffers.insert(name.to_string(), zeros);
         }
         Ok(())
@@ -73,7 +73,8 @@ impl SGDOptimizer {
     ) -> Result<()> {
         // Apply weight decay to gradient if specified
         let effective_grad = if self.weight_decay > 0.0 {
-            grad + (param * self.weight_decay)?
+            let weight_decay_term = (param * self.weight_decay)?;
+            (grad + &weight_decay_term)?
         } else {
             grad.clone()
         };
@@ -85,7 +86,7 @@ impl SGDOptimizer {
             let momentum_buffer = self.momentum_buffers.get_mut(name).unwrap();
             
             // Update momentum buffer: v_t = μ * v_{t-1} + g_t
-            let new_momentum = (momentum_buffer * self.momentum)? + &effective_grad;
+            let new_momentum = ((&*momentum_buffer * self.momentum)? + &effective_grad)?;
             *momentum_buffer = new_momentum.clone();
             
             new_momentum
@@ -94,7 +95,7 @@ impl SGDOptimizer {
         };
         
         // Apply update: θ_t = θ_{t-1} - α * update
-        let param_update = update * self.learning_rate;
+        let param_update = (&update * self.learning_rate)?;
         
         // This is where you would actually update the parameter
         // In practice, this would modify the parameter tensor in place
@@ -113,7 +114,7 @@ impl Optimizer for SGDOptimizer {
         }
     }
     
-    fn step(&mut self, gradients: &candle_core::backprop::GradStore) -> Result<()> {
+    fn step(&mut self, _gradients: &candle_core::backprop::GradStore) -> Result<()> {
         self.step_count += 1;
         
         // In a real implementation, you would iterate through all parameters

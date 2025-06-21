@@ -56,9 +56,8 @@ pub mod utils;
 pub mod composition;
 
 // Core loss trait and types
-use crate::training::{Result, Error};
-use crate::training::data::{ReconstructionBatch, SupervisedBatch};
-use candle_core::{Tensor, Device};
+use crate::training::Result;
+use candle_core::Tensor;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -320,6 +319,12 @@ impl LossConfig {
             reduction: ReductionMethod::Mean,
             layer_configs: HashMap::new(),
         }
+    }
+}
+
+impl Default for LossConfig {
+    fn default() -> Self {
+        Self::reconstruction_default()
     }
 }
 

@@ -83,7 +83,7 @@ impl LoraConfig {
     /// Create configuration optimized for a specific task type
     pub fn for_task(task_type: TaskType) -> Self {
         let mut config = Self::default();
-        config.task_type = Some(task_type);
+        config.task_type = Some(task_type.clone());
         
         // Adjust parameters based on task type
         match task_type {
@@ -206,32 +206,32 @@ impl LoraConfig {
     }
     
     /// Validate configuration
-    pub fn validate(&self) -> Result<(), String> {
+    pub fn validate(&self) -> Result<(), crate::error::Error> {
         if self.rank == 0 {
-            return Err("LoRA rank must be greater than 0".to_string());
+            return Err(crate::error::Error::InvalidInput("LoRA rank must be greater than 0".to_string()));
         }
         
         if self.rank > 512 {
-            return Err("LoRA rank should not exceed 512 for efficiency".to_string());
+            return Err(crate::error::Error::InvalidInput("LoRA rank should not exceed 512 for efficiency".to_string()));
         }
         
         if self.alpha <= 0.0 {
-            return Err("LoRA alpha must be positive".to_string());
+            return Err(crate::error::Error::InvalidInput("LoRA alpha must be positive".to_string()));
         }
         
         if self.dropout < 0.0 || self.dropout > 1.0 {
-            return Err("Dropout must be between 0.0 and 1.0".to_string());
+            return Err(crate::error::Error::InvalidInput("Dropout must be between 0.0 and 1.0".to_string()));
         }
         
         if self.target_modules.is_empty() {
-            return Err("At least one target module must be specified".to_string());
+            return Err(crate::error::Error::InvalidInput("At least one target module must be specified".to_string()));
         }
         
         // Check for duplicate target modules
         let mut unique_modules = std::collections::HashSet::new();
         for module in &self.target_modules {
             if !unique_modules.insert(module) {
-                return Err(format!("Duplicate target module: {}", module));
+                return Err(crate::error::Error::InvalidInput(format!("Duplicate target module: {}", module)));
             }
         }
         
@@ -422,7 +422,7 @@ impl LoraConfigBuilder {
     }
     
     /// Build the configuration
-    pub fn build(self) -> Result<LoraConfig, String> {
+    pub fn build(self) -> Result<LoraConfig, crate::error::Error> {
         self.config.validate()?;
         Ok(self.config)
     }

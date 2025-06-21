@@ -3,13 +3,13 @@
 //! This module provides utilities for loss computation, numerical stability,
 //! metrics calculation, and gradient handling.
 
-use super::{LossMetrics, LossConfig, StabilityConfig, LossScalingConfig};
-use crate::training::{Result, Error};
+use super::{StabilityConfig, LossScalingConfig};
+use crate::training::Result;
 use candle_core::{Tensor, Device, DType, D};
 use candle_nn as nn;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use anyhow::{Context, anyhow};
+use anyhow::Context;
 use tracing::{debug, warn, instrument};
 
 /// Loss computation utilities
@@ -98,11 +98,16 @@ impl LossUtils {
     
     /// Check if tensor contains NaN or Inf values
     fn has_nan_or_inf(&self, tensor: &Tensor) -> Result<bool> {
-        let is_finite = tensor.is_finite()?;
-        let all_finite = is_finite.sum_all()?.to_scalar::<i64>()?;
-        let total_elements = tensor.elem_count() as i64;
+        // Check for NaN by comparing tensor with itself (NaN != NaN)
+        let ne_result = tensor.ne(tensor)?;
+        let has_nan = ne_result.sum_all()?.to_scalar::<f64>()? > 0.0;
+        if has_nan {
+            return Ok(true);
+        }
         
-        Ok(all_finite != total_elements)
+        // Check for infinity by comparing absolute value with a large number
+        let max_val = tensor.abs()?.max(D::Minus1)?.max(D::Minus1)?.to_scalar::<f64>()?;
+        Ok(max_val.is_infinite())
     }
     
     /// Weighted loss combination for multi-task learning
@@ -139,7 +144,9 @@ impl LossUtils {
             if let Ok(grad) = loss.backward() {
                 // In practice, you'd extract the gradient for this specific parameter
                 // This is a simplified version
-                gradients.insert(name.clone(), grad.clone());
+                // In practice, you'd extract the gradient for this specific parameter
+                // This is a simplified placeholder
+                gradients.insert(name.clone(), loss.clone());
             }
         }
         
@@ -238,9 +245,14 @@ impl NumericalStability {
     
     /// Replace NaN/Inf values with safe defaults
     pub fn replace_nan_inf(&self, tensor: &Tensor, replacement: f64) -> Result<Tensor> {
-        let is_finite = tensor.is_finite()?;
-        let replacement_tensor = Tensor::full(replacement, tensor.shape(), tensor.device())?;
-        is_finite.where_cond(tensor, &replacement_tensor)
+        // Create masks for NaN and Inf values
+        let is_nan = tensor.ne(tensor)?; // NaN != NaN
+        let is_inf = tensor.abs()?.gt(&Tensor::full(1e30, tensor.shape().dims(), tensor.device())?)?;
+        // Combine NaN and Inf masks using element-wise maximum
+        let is_invalid = (&is_nan.to_dtype(DType::F32)? + &is_inf.to_dtype(DType::F32)?)?.ge(&Tensor::full(0.5, is_nan.shape(), is_nan.device())?)?;
+        
+        let replacement_tensor = Tensor::full(replacement, tensor.shape().dims(), tensor.device())?;
+        is_invalid.where_cond(&replacement_tensor, tensor)
             .context("Failed to replace NaN/Inf values")
     }
     
@@ -253,7 +265,8 @@ impl NumericalStability {
     
     /// Check tensor health (NaN, Inf, extreme values)
     pub fn check_tensor_health(&self, tensor: &Tensor, name: &str) -> Result<TensorHealthReport> {
-        let has_nan = !tensor.is_finite()?.all()?.to_scalar::<u8>()? != 0;
+        let ne_result = tensor.ne(tensor)?;
+        let has_nan = ne_result.sum_all()?.to_scalar::<f64>()? > 0.0;
         let abs_tensor = tensor.abs()?;
         let max_val = abs_tensor.max(D::Minus1)?.max(D::Minus1)?.to_scalar::<f64>()?;
         let min_val = abs_tensor.min(D::Minus1)?.min(D::Minus1)?.to_scalar::<f64>()?;
@@ -276,7 +289,7 @@ impl NumericalStability {
             max_value: max_val,
             min_value: min_val,
             mean_value: mean_val,
-            shape: tensor.shape().to_vec(),
+            shape: tensor.shape().dims().to_vec(),
         })
     }
 }
@@ -429,8 +442,10 @@ impl MetricsComputer {
         let targets_expanded = targets.unsqueeze(1)?.expand(&[batch_size, k])?;
         
         // Check if target is in top-k
-        let matches = topk_indices.eq(&targets_expanded)?.any_keepdim(1)?;
-        let accuracy = matches.to_dtype(DType::F32)?.mean_all()?.to_scalar::<f64>()?;
+        let matches = topk_indices.eq(&targets_expanded)?;
+        let matches_sum = matches.to_dtype(DType::F32)?.sum_keepdim(1)?;
+        let has_match = matches_sum.ge(&Tensor::full(0.5, matches_sum.shape(), matches_sum.device())?)?;
+        let accuracy = has_match.to_dtype(DType::F32)?.mean_all()?.to_scalar::<f64>()?;
         
         Ok(accuracy)
     }
@@ -440,7 +455,7 @@ impl MetricsComputer {
         // Simplified version - in practice, you'd implement proper top-k
         let mut indices = Vec::new();
         for i in 0..k.min(tensor.dim(1)?) {
-            indices.push(i);
+            indices.push(i as u32);
         }
         
         let batch_size = tensor.dim(0)?;
@@ -549,7 +564,14 @@ impl LossScaler {
     /// Check for gradient overflow
     pub fn check_gradient_overflow(&self, gradients: &HashMap<String, Tensor>) -> Result<bool> {
         for (_, grad) in gradients {
-            if !grad.is_finite()?.all()?.to_scalar::<u8>()? != 0 {
+            // Check for NaN or Inf in gradients
+            let ne_result = grad.ne(grad)?;
+            let has_nan = ne_result.sum_all()?.to_scalar::<f64>()? > 0.0;
+            if has_nan {
+                return Ok(true);
+            }
+            let max_val = grad.abs()?.max(D::Minus1)?.max(D::Minus1)?.to_scalar::<f64>()?;
+            if max_val.is_infinite() {
                 return Ok(true);
             }
         }
